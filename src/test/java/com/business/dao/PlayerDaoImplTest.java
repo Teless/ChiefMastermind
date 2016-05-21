@@ -80,7 +80,7 @@ public class PlayerDaoImplTest {
     @Test
     public void testAddGuess() throws Exception {
         Guess guess = new Guess();
-        guess.setGuess("aaaaaaaa");
+        guess.setCode("aaaaaaaa");
         guess.setExact(3);
         guess.setNear(2);
 

@@ -20,9 +20,7 @@ public class Game implements MasterEntity {
     private int playersCount;
     private int maxRounds;
     private int round;
-
-    // TODO: 21-May-16 generate pattern
-    // TODO: 21-May-16 set default value for maxRounds
+    private String secrectCode;
 
     @Reference
     private List<Player> players;
@@ -81,6 +79,14 @@ public class Game implements MasterEntity {
         this.round = round;
     }
 
+    public String getSecrectCode() {
+        return secrectCode;
+    }
+
+    public void setSecrectCode(String secrectCode) {
+        this.secrectCode = secrectCode;
+    }
+
     public void setStatus(GameStatus status) {
         this.status = status;
     }
@@ -111,6 +117,7 @@ public class Game implements MasterEntity {
                     .append(playersCount, that.playersCount)
                     .append(maxRounds, that.maxRounds)
                     .append(round, that.round)
+                    .append(secrectCode, that.secrectCode)
                     .append(gameKey, that.gameKey)
                     .append(players, that.players)
                     .isEquals();
@@ -139,6 +146,7 @@ public class Game implements MasterEntity {
                 .append("playersCount", playersCount)
                 .append("maxRounds", maxRounds)
                 .append("round", round)
+                .append("secrectCode", secrectCode)
                 .append("gameKey", gameKey)
                 .append("players", players)
                 .toString();

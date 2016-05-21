@@ -9,7 +9,7 @@ public class Guess {
 
     private int near;
     private int exact;
-    private String guess;
+    private String code;
 
     public int getNear() {
         return near;
@@ -27,12 +27,12 @@ public class Guess {
         this.exact = exact;
     }
 
-    public String getGuess() {
-        return guess;
+    public String getCode() {
+        return code;
     }
 
-    public void setGuess(String guess) {
-        this.guess = guess;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     @Override
@@ -47,7 +47,7 @@ public class Guess {
             Guess that = (Guess) o;
 
             equals = new EqualsBuilder()
-                    .append(guess, that.guess)
+                    .append(code, that.code)
                     .append(near, that.near)
                     .append(exact, that.exact)
                     .isEquals();
@@ -59,7 +59,7 @@ public class Guess {
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(guess)
+                .append(code)
                 .toHashCode();
     }
 
@@ -72,7 +72,7 @@ public class Guess {
         return new ToStringBuilder(this, style)
                 .append("near", near)
                 .append("exact", exact)
-                .append("guess", guess)
+                .append("code", code)
                 .toString();
     }
 }

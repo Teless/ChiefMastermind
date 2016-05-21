@@ -37,7 +37,7 @@ public class GameController {
 
     @Post
     @Consumes(value = "application/json", options = WithoutRoot.class)
-    public void newGame(String user) {
+    public void newGame(String user, int playerLimit, int roundLimit) {
         // TODO: 21-May-16 log
     }
 
