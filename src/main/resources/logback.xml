@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration scan="true">
+
+    <property name="log.dir" value="chiefMastermind-logs"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}; [%thread]; %-5level; %logger{36}; %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="com.business.log.MarkerFilter">
+            <marker>PROFILER</marker>
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+
+        <file>${log.dir}/chiefMastermind.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.dir}/archive/chiefMastermind.%d{yyyy-MM-dd}-%i.zip</fileNamePattern>
+            <maxHistory>15</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss}; [%thread]; %-5level; %logger{36}; %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="PROFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="com.business.log.MarkerFilter">
+            <marker>PROFILER</marker>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+
+        <file>${log.dir}/profile.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.dir}/archive/profile.%d{dd-MM-yyyy}-%i.log.zip</fileNamePattern>
+            <maxHistory>15</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>15MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="FILE" />
+        <appender-ref ref="STDOUT" />
+    </root>
+
+    <logger name="PROFILE_LOG" level="debug">
+        <appender-ref ref="PROFILE" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+</configuration>
