@@ -20,7 +20,8 @@ public class Game implements MasterEntity {
     private int playersCount;
     private int maxRounds;
     private int round;
-    private String secrectCode;
+    private int positions;
+    private String secretCode;
 
     @Reference
     private List<Player> players;
@@ -79,12 +80,20 @@ public class Game implements MasterEntity {
         this.round = round;
     }
 
-    public String getSecrectCode() {
-        return secrectCode;
+    public int getPositions() {
+        return positions;
     }
 
-    public void setSecrectCode(String secrectCode) {
-        this.secrectCode = secrectCode;
+    public void setPositions(int positions) {
+        this.positions = positions;
+    }
+
+    public String getSecretCode() {
+        return secretCode;
+    }
+
+    public void setSecretCode(String secretCode) {
+        this.secretCode = secretCode;
     }
 
     public void setStatus(GameStatus status) {
@@ -117,7 +126,8 @@ public class Game implements MasterEntity {
                     .append(playersCount, that.playersCount)
                     .append(maxRounds, that.maxRounds)
                     .append(round, that.round)
-                    .append(secrectCode, that.secrectCode)
+                    .append(positions, that.positions)
+                    .append(secretCode, that.secretCode)
                     .append(gameKey, that.gameKey)
                     .append(players, that.players)
                     .isEquals();
@@ -146,7 +156,8 @@ public class Game implements MasterEntity {
                 .append("playersCount", playersCount)
                 .append("maxRounds", maxRounds)
                 .append("round", round)
-                .append("secrectCode", secrectCode)
+                .append("positions", positions)
+                .append("secretCode", secretCode)
                 .append("gameKey", gameKey)
                 .append("players", players)
                 .toString();
