@@ -3,7 +3,7 @@ package com.business.dao;
 import com.business.GameUtil;
 import com.domain.Game;
 import com.domain.GameStatus;
-import com.domain.User;
+import com.domain.Player;
 import com.mock.SystemPropertiesMock;
 import org.bson.types.ObjectId;
 import org.jglue.cdiunit.AdditionalClasses;
@@ -25,7 +25,10 @@ import static org.junit.Assert.*;
 public class GameDaoImplTest {
 
     @Inject
-    private GameDaoImpl dao;
+    private GameDaoImpl gameDao;
+
+    @Inject
+    private PlayerDaoImpl playerDao;
 
     @Inject
     private Datastore datastore;
@@ -33,120 +36,158 @@ public class GameDaoImplTest {
     private Game gameWaiting;
     private Game gameRunning;
     private Game gameFinished;
+    private Player playerWaiting;
+    private Player playerPlaying;
+    private Player playerWinner;
 
     @Before
     public void setUp() throws Exception {
-        Query<Game> query = datastore.createQuery(Game.class);
-        datastore.delete(query);
+        datastore.delete(datastore.createQuery(Game.class));
+        datastore.delete(datastore.createQuery(Player.class));
 
-        User userWaiting = new User("Initial waiting user");
+        //<editor-fold desc="Set waiting game">
         gameWaiting = new Game();
         gameWaiting.setStatus(GameStatus.WAITING);
         gameWaiting.setGameKey(GameUtil.generateGamekey());
-        gameWaiting.setUsers(Collections.singletonList(userWaiting));
-        gameWaiting.setId(dao.save(gameWaiting));
+        gameWaiting.setPlayers(Collections.emptyList());
+        gameDao.save(gameWaiting);
 
-        User userPlaying = new User("Initial playing user");
+        playerWaiting = new Player("Initial waiting player");
+        playerWaiting.setGame(gameWaiting);
+        playerDao.save(playerWaiting);
+
+        gameWaiting.setPlayers(Collections.singletonList(playerWaiting));
+        gameDao.save(gameWaiting);
+        //</editor-fold>
+
+        //<editor-fold desc="Set running game">
         gameRunning = new Game();
         gameRunning.setStatus(GameStatus.MASTER_MINDING);
         gameRunning.setGameKey(GameUtil.generateGamekey());
-        gameRunning.setUsers(Collections.singletonList(userPlaying));
-        gameRunning.setId(dao.save(gameRunning));
+        gameRunning.setPlayers(Collections.emptyList());
+        gameDao.save(gameRunning);
 
-        User userWinner = new User("Initial winner user");
+        playerPlaying = new Player("Initial playing player");
+        playerPlaying.setGame(gameRunning);
+        playerDao.save(playerPlaying);
+
+        gameRunning.setPlayers(Collections.singletonList(playerPlaying));
+        gameDao.save(gameRunning);
+        //</editor-fold>
+
+        //<editor-fold desc="Set finished game">
         gameFinished = new Game();
         gameFinished.setStatus(GameStatus.FINISHED);
         gameFinished.setGameKey(GameUtil.generateGamekey());
-        gameFinished.setUsers(Collections.singletonList(userWinner));
-        gameFinished.setId(dao.save(gameFinished));
+        gameFinished.setPlayers(Collections.emptyList());
+        gameDao.save(gameFinished);
+
+        playerWinner = new Player("Initial winner player");
+        playerWinner.setGame(gameFinished);
+        playerDao.save(playerWinner);
+
+        gameFinished.setPlayers(Collections.singletonList(playerWinner));
+        gameDao.save(gameFinished);
+        //</editor-fold>
     }
 
     @Test
-    public void testCreateGame() throws Exception {
-        User user = new User("Rafael");
+    public void testList() throws Exception {
+        assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished), gameDao.list());
+    }
 
+    @Test
+    public void testFind() throws Exception {
+        Game gameFetched = gameDao.find(gameRunning.getId().toString());
+        assertEquals(gameRunning, gameFetched);
+    }
+
+    @Test
+    public void testSave() throws Exception {
         Game newGame = new Game();
         newGame.setStatus(GameStatus.MASTER_MINDING);
         newGame.setGameKey(GameUtil.generateGamekey());
-        newGame.setUsers(Collections.singletonList(user));
+        newGame.setPlayers(Collections.emptyList());
 
-        ObjectId id = dao.save(newGame);
+        ObjectId id = gameDao.save(newGame);
         newGame.setId(id);
 
-        Game gameFetched = dao.find(id.toString());
+        Game gameFetched = gameDao.find(id.toString());
         assertEquals(newGame, gameFetched);
-        assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished, newGame), dao.list());
+        assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished, newGame), gameDao.list());
     }
 
     @Test
     public void testJoinWaitingGame() throws Exception {
-        User user = new User("MasterMind");
+        Player player = new Player("MasterMind");
+        player.setGame(gameWaiting);
+        playerDao.save(player);
 
-        boolean joinned = dao.joinGame(user, gameWaiting.getId().toString());
-        assertTrue("The user did not joined the game", joinned);
+        boolean joinned = gameDao.joinGame(player, gameWaiting.getId().toString());
+        assertTrue("The player did not joined the game", joinned);
 
-        gameWaiting.setUsers(Arrays.asList(
-                new User("Initial waiting user"),
-                new User("MasterMind")
-        ));
+        gameWaiting.setPlayers(Arrays.asList(playerWaiting, player));
 
-        Game gameFetched = dao.find(gameWaiting.getId().toString());
+        Game gameFetched = gameDao.find(gameWaiting.getId().toString());
         assertEquals(gameWaiting, gameFetched);
-        assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished), dao.list());
+        assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished), gameDao.list());
     }
 
     @Test
     public void testJoinRunningGame() throws Exception {
-        User user = new User("MasterMind");
+        Player player = new Player("MasterMind");
+        player.setGame(gameRunning);
+        playerDao.save(player);
 
-        boolean joinned = dao.joinGame(user, gameRunning.getId().toString());
-        assertFalse("The user was not suppose to be able to join the game", joinned);
+        boolean joinned = gameDao.joinGame(player, gameRunning.getId().toString());
+        assertFalse("The player was not suppose to be able to join the game", joinned);
 
-        assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished), dao.list());
+        assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished), gameDao.list());
     }
 
     @Test
     public void testJoinFinishedGame() throws Exception {
-        User user = new User("MasterMind");
+        Player player = new Player("MasterMind");
+        player.setGame(gameFinished);
+        playerDao.save(player);
 
-        boolean joinned = dao.joinGame(user, gameFinished.getId().toString());
-        assertFalse("The user was not suppose to be able to join the game", joinned);
+        boolean joinned = gameDao.joinGame(player, gameFinished.getId().toString());
+        assertFalse("The player was not suppose to be able to join the game", joinned);
 
-        assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished), dao.list());
+        assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished), gameDao.list());
     }
 
-    @Test
-    public void testJoinGameUserNameConflict() throws Exception {
-        User user = new User("Initial waiting user");
+    @Test(expected = IllegalArgumentException.class)
+    public void testJoinGameWithoutSavingPlayer() throws Exception {
+        Player player = new Player("MasterMind");
+        player.setGame(gameWaiting);
 
-        boolean joinned = dao.joinGame(user, gameWaiting.getId().toString());
-        assertFalse("The user was not suppose to be able to join the game", joinned);
-
-        assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished), dao.list());
+        gameDao.joinGame(player, gameWaiting.getId().toString());
     }
 
     @Test
     public void testStartGameWaiting() throws Exception {
-        boolean started = dao.startGame(gameWaiting.getGameKey(), gameWaiting.getId().toString());
+        boolean started = gameDao.startGame(gameWaiting.getGameKey(), gameWaiting.getId().toString());
         gameWaiting.setStatus(GameStatus.MASTER_MINDING);
 
         assertTrue("The game didn't start", started);
-        assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished), dao.list());
+        assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished), gameDao.list());
     }
 
     @Test
     public void testStartGameRunning() throws Exception {
-        boolean started = dao.startGame(gameRunning.getGameKey(), gameRunning.getId().toString());
+        boolean started = gameDao.startGame(gameRunning.getGameKey(), gameRunning.getId().toString());
 
         assertFalse("The game started", started);
-        assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished), dao.list());
+        assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished), gameDao.list());
     }
 
     @Test
     public void testStartGameFinished() throws Exception {
-        boolean started = dao.startGame(gameFinished.getGameKey(), gameFinished.getId().toString());
+        boolean started = gameDao.startGame(gameFinished.getGameKey(), gameFinished.getId().toString());
 
         assertFalse("The game started", started);
-        assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished), dao.list());
+        assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished), gameDao.list());
     }
+
 }

@@ -1,8 +1,7 @@
 package com.business.dao;
 
-import br.com.caelum.vraptor.environment.Property;
 import com.business.SystemProperties;
-import com.domain.User;
+import com.domain.Player;
 import com.mongodb.MongoClient;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
@@ -26,7 +25,7 @@ public class DatastoreFactory {
             datastore = null;
         } else {
             Morphia morphia = new Morphia();
-            morphia.mapPackageFromClass(User.class);
+            morphia.mapPackageFromClass(Player.class);
 
             MongoClient mongoClient = new MongoClient(systemProperties.getMongoHost(), systemProperties.getMongoPort());
             datastore = morphia.createDatastore(mongoClient, systemProperties.getMongoDbName());

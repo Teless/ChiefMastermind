@@ -5,27 +5,27 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.StandardToStringStyle;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.annotations.Embedded;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.*;
 
 import java.util.List;
 
 @Entity("games")
-public class Game {
+public class Game implements MasterEntity {
 
     @Id
     private ObjectId id;
     private String gameKey;
     private GameStatus status;
 
-    @Embedded
-    private List<User> users;
+    @Reference
+    private List<Player> players;
 
+    @Override
     public ObjectId getId() {
         return id;
     }
 
+    @Override
     public void setId(ObjectId id) {
         this.id = id;
     }
@@ -46,12 +46,12 @@ public class Game {
         this.status = status;
     }
 
-    public List<User> getUsers() {
-        return users;
+    public List<Player> getPlayers() {
+        return players;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void setPlayers(List<Player> players) {
+        this.players = players;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class Game {
                     .append(id, that.id)
                     .append(gameKey, that.gameKey)
                     .append(status, that.status)
-                    .append(users, that.users)
+                    .append(players, that.players)
                     .isEquals();
         }
 
@@ -79,7 +79,7 @@ public class Game {
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(id)
+                .append(gameKey)
                 .toHashCode();
     }
 
@@ -89,11 +89,11 @@ public class Game {
         style.setUseClassName(false);
         style.setUseIdentityHashCode(false);
 
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this, style)
                 .append("id", id)
                 .append("gameKey", gameKey)
                 .append("status", status)
-                .append("users", users)
+                .append("players", players)
                 .toString();
     }
 }
