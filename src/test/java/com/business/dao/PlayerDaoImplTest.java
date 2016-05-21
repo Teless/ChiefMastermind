@@ -3,6 +3,7 @@ package com.business.dao;
 import com.business.GameUtil;
 import com.domain.Game;
 import com.domain.GameStatus;
+import com.domain.Guess;
 import com.domain.Player;
 import com.mock.SystemPropertiesMock;
 import com.mongodb.DuplicateKeyException;
@@ -14,7 +15,6 @@ import org.junit.runner.RunWith;
 import org.mongodb.morphia.Datastore;
 
 import javax.inject.Inject;
-import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.Assert.*;
@@ -32,47 +32,65 @@ public class PlayerDaoImplTest {
     @Inject
     private Datastore datastore;
 
-    private Game gameWaiting;
-    private Player playerWaiting;
+    private Game gameRunning;
+    private Player playerMasterMinding;
 
     @Before
     public void setUp() throws Exception {
         datastore.delete(datastore.createQuery(Game.class));
         datastore.delete(datastore.createQuery(Player.class));
 
-        //<editor-fold desc="Set waiting game">
-        gameWaiting = new Game();
-        gameWaiting.setStatus(GameStatus.WAITING);
-        gameWaiting.setGameKey(GameUtil.generateGamekey());
-        gameWaiting.setPlayers(Collections.emptyList());
-        gameDao.save(gameWaiting);
+        //<editor-fold desc="Set game">
+        gameRunning = new Game();
+        gameRunning.setStatus(GameStatus.MASTER_MINDING);
+        gameRunning.setGameKey(GameUtil.generateGamekey());
+        gameRunning.setPlayers(Collections.emptyList());
+        gameRunning.setPlayersLimit(2);
+        gameRunning.setPlayersCount(1);
+        gameDao.save(gameRunning);
 
-        playerWaiting = new Player("Initial waiting player");
-        playerWaiting.setGame(gameWaiting);
-        playerDao.save(playerWaiting);
+        playerMasterMinding = new Player("Initial waiting player");
+        playerMasterMinding.setGame(gameRunning);
+        playerDao.save(playerMasterMinding);
 
-        gameWaiting.setPlayers(Collections.singletonList(playerWaiting));
-        gameDao.save(gameWaiting);
+        gameRunning.setPlayers(Collections.singletonList(playerMasterMinding));
+        gameDao.save(gameRunning);
         //</editor-fold>
 
     }
 
     @Test
     public void testList() throws Exception {
-        assertEquals(Collections.singletonList(playerWaiting), playerDao.list());
+        assertEquals(Collections.singletonList(playerMasterMinding), playerDao.list());
     }
 
     @Test
     public void testFind() throws Exception {
-        Player playerFetched = playerDao.find(playerWaiting.getId().toString());
-        assertEquals(playerWaiting, playerFetched);
+        Player playerFetched = playerDao.find(playerMasterMinding.getId().toString());
+        assertEquals(playerMasterMinding, playerFetched);
     }
 
     @Test(expected = DuplicateKeyException.class)
     public void saveDuplicatedName() throws Exception {
-        Player player = new Player(playerWaiting.getName());
-        player.setGame(gameWaiting);
+        Player player = new Player(playerMasterMinding.getName());
+        player.setGame(gameRunning);
         playerDao.save(player);
     }
 
+    @Test
+    public void testAddGuess() throws Exception {
+        Guess guess = new Guess();
+        guess.setGuess("aaaaaaaa");
+        guess.setExact(3);
+        guess.setNear(2);
+
+        boolean result = playerDao.addGuess(guess, playerMasterMinding.getId(), gameRunning.getId());
+        assertTrue(result);
+
+        playerMasterMinding.setRound(1);
+        playerMasterMinding.setGuesses(Collections.singletonList(guess));
+        Player playerFound = playerDao.find(playerMasterMinding.getId().toString());
+
+        assertEquals(playerMasterMinding, playerFound);
+    }
 }

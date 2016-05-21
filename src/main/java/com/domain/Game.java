@@ -21,6 +21,7 @@ public class Game implements MasterEntity {
     private int maxRounds;
     private int round;
 
+    // TODO: 21-May-16 generate pattern
     // TODO: 21-May-16 set default value for maxRounds
 
     @Reference

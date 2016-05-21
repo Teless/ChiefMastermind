@@ -7,23 +7,23 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class Guess {
 
-    private short near;
-    private short exact;
+    private int near;
+    private int exact;
     private String guess;
 
-    public short getNear() {
+    public int getNear() {
         return near;
     }
 
-    public void setNear(short near) {
+    public void setNear(int near) {
         this.near = near;
     }
 
-    public short getExact() {
+    public int getExact() {
         return exact;
     }
 
-    public void setExact(short exact) {
+    public void setExact(int exact) {
         this.exact = exact;
     }
 

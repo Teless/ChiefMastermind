@@ -13,8 +13,8 @@ import java.util.List;
 @Entity("players")
 @Indexes({
         @Index(fields = {
-                @Field(value = "name", type = IndexType.ASC),
-                @Field(value = "game", type = IndexType.ASC)
+                @Field(value = "game", type = IndexType.ASC),
+                @Field(value = "name", type = IndexType.ASC)
         }, options = @IndexOptions(
                 unique = true
         ))
@@ -24,6 +24,7 @@ public class Player implements MasterEntity {
     @Id
     private ObjectId id;
     private String name;
+    private int round;
 
     @Reference
     private Game game;
@@ -56,6 +57,14 @@ public class Player implements MasterEntity {
         this.name = name;
     }
 
+    public int getRound() {
+        return round;
+    }
+
+    public void setRound(int round) {
+        this.round = round;
+    }
+
     public Game getGame() {
         return game;
     }
@@ -86,6 +95,7 @@ public class Player implements MasterEntity {
             EqualsBuilder equalsBuilder = new EqualsBuilder()
                     .append(id, that.id)
                     .append(name, that.name)
+                    .append(round, that.round)
                     .append(guesses, that.guesses);
 
             if (game == null || that.game == null) {
@@ -118,6 +128,7 @@ public class Player implements MasterEntity {
         ToStringBuilder toStringBuilder = new ToStringBuilder(this, style)
                 .append("id", id)
                 .append("name", name)
+                .append("round", round)
                 .append("guesses", guesses);
 
         if (game == null) {

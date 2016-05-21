@@ -13,14 +13,6 @@ import javax.inject.Inject;
 
 public class GameDaoImpl extends DaoImpl<Game> implements GameDao {
 
-    /**
-     * @deprecated CDI
-     */
-    @Deprecated
-    public GameDaoImpl() {
-        this(null);
-    }
-
     @Inject
     public GameDaoImpl(Datastore datastore) {
         super(datastore);
