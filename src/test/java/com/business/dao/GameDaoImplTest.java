@@ -12,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.query.Query;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -50,6 +49,8 @@ public class GameDaoImplTest {
         gameWaiting.setStatus(GameStatus.WAITING);
         gameWaiting.setGameKey(GameUtil.generateGamekey());
         gameWaiting.setPlayers(Collections.emptyList());
+        gameWaiting.setPlayersLimit(4);
+        gameWaiting.setMaxRounds(2);
         gameDao.save(gameWaiting);
 
         playerWaiting = new Player("Initial waiting player");
@@ -65,6 +66,8 @@ public class GameDaoImplTest {
         gameRunning.setStatus(GameStatus.MASTER_MINDING);
         gameRunning.setGameKey(GameUtil.generateGamekey());
         gameRunning.setPlayers(Collections.emptyList());
+        gameRunning.setPlayersLimit(4);
+        gameRunning.setMaxRounds(2);
         gameDao.save(gameRunning);
 
         playerPlaying = new Player("Initial playing player");
@@ -80,6 +83,8 @@ public class GameDaoImplTest {
         gameFinished.setStatus(GameStatus.FINISHED);
         gameFinished.setGameKey(GameUtil.generateGamekey());
         gameFinished.setPlayers(Collections.emptyList());
+        gameFinished.setPlayersLimit(4);
+        gameFinished.setMaxRounds(2);
         gameDao.save(gameFinished);
 
         playerWinner = new Player("Initial winner player");
@@ -118,15 +123,16 @@ public class GameDaoImplTest {
     }
 
     @Test
-    public void testJoinWaitingGame() throws Exception {
+    public void testTryToJoinWaitingGame() throws Exception {
         Player player = new Player("MasterMind");
         player.setGame(gameWaiting);
         playerDao.save(player);
 
-        boolean joinned = gameDao.joinGame(player, gameWaiting.getId().toString());
-        assertTrue("The player did not joined the game", joinned);
+        boolean joined = gameDao.tryToJoinGame(player, gameWaiting.getId().toString());
+        assertTrue("The player did not joined the game", joined);
 
         gameWaiting.setPlayers(Arrays.asList(playerWaiting, player));
+        gameWaiting.setPlayersCount(1);
 
         Game gameFetched = gameDao.find(gameWaiting.getId().toString());
         assertEquals(gameWaiting, gameFetched);
@@ -134,35 +140,55 @@ public class GameDaoImplTest {
     }
 
     @Test
-    public void testJoinRunningGame() throws Exception {
+    public void testTryToJoinRunningGame() throws Exception {
         Player player = new Player("MasterMind");
         player.setGame(gameRunning);
         playerDao.save(player);
 
-        boolean joinned = gameDao.joinGame(player, gameRunning.getId().toString());
-        assertFalse("The player was not suppose to be able to join the game", joinned);
+        boolean joined = gameDao.tryToJoinGame(player, gameRunning.getId().toString());
+        assertFalse("The player was not suppose to be able to join the game", joined);
 
         assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished), gameDao.list());
     }
 
     @Test
-    public void testJoinFinishedGame() throws Exception {
+    public void testTryToJoinFinishedGame() throws Exception {
         Player player = new Player("MasterMind");
         player.setGame(gameFinished);
         playerDao.save(player);
 
-        boolean joinned = gameDao.joinGame(player, gameFinished.getId().toString());
-        assertFalse("The player was not suppose to be able to join the game", joinned);
+        boolean joined = gameDao.tryToJoinGame(player, gameFinished.getId().toString());
+        assertFalse("The player was not suppose to be able to join the game", joined);
 
         assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished), gameDao.list());
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testJoinGameWithoutSavingPlayer() throws Exception {
+    public void testTryToJoinGameWithoutSavingPlayer() throws Exception {
         Player player = new Player("MasterMind");
         player.setGame(gameWaiting);
 
-        gameDao.joinGame(player, gameWaiting.getId().toString());
+        gameDao.tryToJoinGame(player, gameWaiting.getId().toString());
+    }
+
+    @Test
+    public void testTryToJoinExceedLimit() throws Exception {
+        Game newGame = new Game();
+        newGame.setStatus(GameStatus.WAITING);
+        newGame.setGameKey(GameUtil.generateGamekey());
+        newGame.setPlayers(Collections.emptyList());
+        newGame.setPlayersLimit(2);
+        newGame.setMaxRounds(2);
+        gameDao.save(newGame);
+
+        boolean firstJoinResult = gameDao.tryToJoinGame(playerWaiting, newGame.getId().toString());
+        assertTrue(firstJoinResult);
+
+        boolean secondJoinResult = gameDao.tryToJoinGame(playerPlaying, newGame.getId().toString());
+        assertTrue(secondJoinResult);
+
+        boolean thirdJoinResult = gameDao.tryToJoinGame(playerWinner, newGame.getId().toString());
+        assertFalse(thirdJoinResult);
     }
 
     @Test
@@ -189,5 +215,4 @@ public class GameDaoImplTest {
         assertFalse("The game started", started);
         assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished), gameDao.list());
     }
-
 }

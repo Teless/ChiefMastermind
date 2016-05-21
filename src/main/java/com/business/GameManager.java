@@ -8,6 +8,7 @@ import java.util.Collections;
 public class GameManager {
 
     // TODO: 21-May-16 check if the player is joining a running or finished game
+    // TODO: 21-May-16 catch duplicated key
 
     public void quickGame(String userName) {
         Player user = new Player(userName);

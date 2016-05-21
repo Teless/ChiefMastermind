@@ -3,13 +3,13 @@ package com.business.dao;
 import com.domain.Game;
 import com.domain.GameStatus;
 import com.domain.Player;
+import com.exception.NoResultFound;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 
 import javax.inject.Inject;
-import java.util.List;
 
 public class GameDaoImpl extends DaoImpl<Game> implements GameDao {
 
@@ -27,19 +27,31 @@ public class GameDaoImpl extends DaoImpl<Game> implements GameDao {
     }
 
     @Override
-    public boolean joinGame(Player player, String gameId) {
+    public boolean tryToJoinGame(Player player, String gameId) throws NoResultFound {
         if (player.getId() == null) {
             throw new IllegalArgumentException("Player id was not defined");
         } else {
-            UpdateOperations<Game> updateOperation = datastore.createUpdateOperations(Game.class)
-                    .add("players", player);
+            Game game = find(gameId);
 
-            Query<Game> query = datastore.createQuery(Game.class)
-                    .field("id").equal(new ObjectId(gameId))
-                    .field("status").equal(GameStatus.WAITING);
-
-            return datastore.update(query, updateOperation).getUpdatedCount() == 1;
+            if (game == null) {
+                throw new NoResultFound("game", gameId);
+            } else {
+                return joinGame(player, game);
+            }
         }
+    }
+
+    private boolean joinGame(Player player, Game game) {
+        UpdateOperations<Game> updateOperation = datastore.createUpdateOperations(Game.class)
+                .inc("playersCount")
+                .add("players", player);
+
+        Query<Game> query = datastore.createQuery(Game.class)
+                .field("playersCount").lessThan(game.getPlayersLimit())
+                .field("id").equal(game.getId())
+                .field("status").equal(GameStatus.WAITING);
+
+        return datastore.update(query, updateOperation).getUpdatedCount() == 1;
     }
 
     @Override

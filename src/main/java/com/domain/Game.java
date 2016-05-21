@@ -16,6 +16,12 @@ public class Game implements MasterEntity {
     private ObjectId id;
     private String gameKey;
     private GameStatus status;
+    private int playersLimit;
+    private int playersCount;
+    private int maxRounds;
+    private int round;
+
+    // TODO: 21-May-16 set default value for maxRounds
 
     @Reference
     private List<Player> players;
@@ -40,6 +46,38 @@ public class Game implements MasterEntity {
 
     public GameStatus getStatus() {
         return status;
+    }
+
+    public int getPlayersLimit() {
+        return playersLimit;
+    }
+
+    public void setPlayersLimit(int playersLimit) {
+        this.playersLimit = playersLimit;
+    }
+
+    public int getPlayersCount() {
+        return playersCount;
+    }
+
+    public void setPlayersCount(int playersCount) {
+        this.playersCount = playersCount;
+    }
+
+    public int getMaxRounds() {
+        return maxRounds;
+    }
+
+    public void setMaxRounds(int maxRounds) {
+        this.maxRounds = maxRounds;
+    }
+
+    public int getRound() {
+        return round;
+    }
+
+    public void setRound(int round) {
+        this.round = round;
     }
 
     public void setStatus(GameStatus status) {
@@ -67,8 +105,12 @@ public class Game implements MasterEntity {
 
             equals = new EqualsBuilder()
                     .append(id, that.id)
-                    .append(gameKey, that.gameKey)
                     .append(status, that.status)
+                    .append(playersLimit, that.playersLimit)
+                    .append(playersCount, that.playersCount)
+                    .append(maxRounds, that.maxRounds)
+                    .append(round, that.round)
+                    .append(gameKey, that.gameKey)
                     .append(players, that.players)
                     .isEquals();
         }
@@ -91,8 +133,12 @@ public class Game implements MasterEntity {
 
         return new ToStringBuilder(this, style)
                 .append("id", id)
-                .append("gameKey", gameKey)
                 .append("status", status)
+                .append("playersLimit", playersLimit)
+                .append("playersCount", playersCount)
+                .append("maxRounds", maxRounds)
+                .append("round", round)
+                .append("gameKey", gameKey)
                 .append("players", players)
                 .toString();
     }
