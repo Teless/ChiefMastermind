@@ -12,7 +12,7 @@ public interface GameDao {
 
     boolean joinGame(User user, String gameId);
 
-    boolean startGame(String gamekey, String gameId);
+    boolean startGame(String gameKey, String gameId);
 
     Game find(String id);
 

@@ -15,12 +15,10 @@ import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
 
 import javax.inject.Inject;
-
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(CdiRunner.class)
 @AdditionalClasses({DatastoreFactory.class, SystemPropertiesMock.class})
@@ -67,16 +65,17 @@ public class GameDaoImplTest {
     public void testCreateGame() throws Exception {
         User user = new User("Rafael");
 
-        Game game = new Game();
-        game.setStatus(GameStatus.MASTER_MINDING);
-        game.setGameKey(GameUtil.generateGamekey());
-        game.setUsers(Collections.singletonList(user));
+        Game newGame = new Game();
+        newGame.setStatus(GameStatus.MASTER_MINDING);
+        newGame.setGameKey(GameUtil.generateGamekey());
+        newGame.setUsers(Collections.singletonList(user));
 
-        ObjectId id = dao.save(game);
+        ObjectId id = dao.save(newGame);
+        newGame.setId(id);
 
         Game gameFetched = dao.find(id.toString());
-        assertEquals(game, gameFetched);
-        assertEquals(4, dao.list().size());
+        assertEquals(newGame, gameFetched);
+        assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished, newGame), dao.list());
     }
 
     @Test
@@ -93,26 +92,61 @@ public class GameDaoImplTest {
 
         Game gameFetched = dao.find(gameWaiting.getId().toString());
         assertEquals(gameWaiting, gameFetched);
-        assertEquals(3, dao.list().size());
+        assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished), dao.list());
     }
 
     @Test
     public void testJoinRunningGame() throws Exception {
-        throw new UnsupportedOperationException();
+        User user = new User("MasterMind");
+
+        boolean joinned = dao.joinGame(user, gameRunning.getId().toString());
+        assertFalse("The user was not suppose to be able to join the game", joinned);
+
+        assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished), dao.list());
     }
 
     @Test
     public void testJoinFinishedGame() throws Exception {
-        throw new UnsupportedOperationException();
+        User user = new User("MasterMind");
+
+        boolean joinned = dao.joinGame(user, gameFinished.getId().toString());
+        assertFalse("The user was not suppose to be able to join the game", joinned);
+
+        assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished), dao.list());
     }
 
     @Test
     public void testJoinGameUserNameConflict() throws Exception {
-        throw new UnsupportedOperationException();
+        User user = new User("Initial waiting user");
+
+        boolean joinned = dao.joinGame(user, gameWaiting.getId().toString());
+        assertFalse("The user was not suppose to be able to join the game", joinned);
+
+        assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished), dao.list());
     }
 
     @Test
-    public void testStartGame() throws Exception {
-        throw new UnsupportedOperationException();
+    public void testStartGameWaiting() throws Exception {
+        boolean started = dao.startGame(gameWaiting.getGameKey(), gameWaiting.getId().toString());
+        gameWaiting.setStatus(GameStatus.MASTER_MINDING);
+
+        assertTrue("The game didn't start", started);
+        assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished), dao.list());
+    }
+
+    @Test
+    public void testStartGameRunning() throws Exception {
+        boolean started = dao.startGame(gameRunning.getGameKey(), gameRunning.getId().toString());
+
+        assertFalse("The game started", started);
+        assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished), dao.list());
+    }
+
+    @Test
+    public void testStartGameFinished() throws Exception {
+        boolean started = dao.startGame(gameFinished.getGameKey(), gameFinished.getId().toString());
+
+        assertFalse("The game started", started);
+        assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished), dao.list());
     }
 }

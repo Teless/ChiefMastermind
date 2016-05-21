@@ -53,8 +53,18 @@ public class GameDaoImpl implements GameDao {
     }
 
     @Override
-    public boolean startGame(String gamekey, String gameId) {
-        return false;
+    public boolean startGame(String gameKey, String gameId) {
+        UpdateOperations<Game> updateOperation = datastore.createUpdateOperations(Game.class)
+                .set("status", GameStatus.MASTER_MINDING);
+
+        Query<Game> query = datastore.createQuery(Game.class)
+                .field("gameKey").equal(gameKey)
+                .field("id").equal(new ObjectId(gameId))
+                .field("status").equal(GameStatus.WAITING);
+
+        UpdateResults result = datastore.update(query, updateOperation);
+
+        return result.getUpdatedCount() == 1;
     }
 
     @Override
