@@ -71,7 +71,7 @@ public class User {
         style.setUseClassName(false);
         style.setUseIdentityHashCode(false);
 
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this, style)
                 .append("name", name)
                 .append("guesses", guesses)
                 .toString();

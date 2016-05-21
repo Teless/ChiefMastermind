@@ -16,9 +16,11 @@ import org.mongodb.morphia.query.Query;
 
 import javax.inject.Inject;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(CdiRunner.class)
 @AdditionalClasses({DatastoreFactory.class, SystemPropertiesMock.class})
@@ -30,9 +32,9 @@ public class GameDaoImplTest {
     @Inject
     private Datastore datastore;
 
-    private ObjectId initialWaitingGameId;
-    private ObjectId initialRunningGameId;
-    private ObjectId initialFinishedGameId;
+    private Game gameWaiting;
+    private Game gameRunning;
+    private Game gameFinished;
 
     @Before
     public void setUp() throws Exception {
@@ -40,25 +42,25 @@ public class GameDaoImplTest {
         datastore.delete(query);
 
         User userWaiting = new User("Initial waiting user");
-        Game gameWaiting = new Game();
+        gameWaiting = new Game();
         gameWaiting.setStatus(GameStatus.WAITING);
         gameWaiting.setGameKey(GameUtil.generateGamekey());
         gameWaiting.setUsers(Collections.singletonList(userWaiting));
-        initialWaitingGameId = dao.save(gameWaiting);
+        gameWaiting.setId(dao.save(gameWaiting));
 
         User userPlaying = new User("Initial playing user");
-        Game gameRunning = new Game();
+        gameRunning = new Game();
         gameRunning.setStatus(GameStatus.MASTER_MINDING);
         gameRunning.setGameKey(GameUtil.generateGamekey());
         gameRunning.setUsers(Collections.singletonList(userPlaying));
-        initialRunningGameId = dao.save(gameRunning);
+        gameRunning.setId(dao.save(gameRunning));
 
         User userWinner = new User("Initial winner user");
-        Game gameFinished = new Game();
+        gameFinished = new Game();
         gameFinished.setStatus(GameStatus.FINISHED);
         gameFinished.setGameKey(GameUtil.generateGamekey());
         gameFinished.setUsers(Collections.singletonList(userWinner));
-        initialFinishedGameId = dao.save(gameFinished);
+        gameFinished.setId(dao.save(gameFinished));
     }
 
     @Test
@@ -80,6 +82,18 @@ public class GameDaoImplTest {
     @Test
     public void testJoinWaitingGame() throws Exception {
         User user = new User("MasterMind");
+
+        boolean joinned = dao.joinGame(user, gameWaiting.getId().toString());
+        assertTrue("The user did not joined the game", joinned);
+
+        gameWaiting.setUsers(Arrays.asList(
+                new User("Initial waiting user"),
+                new User("MasterMind")
+        ));
+
+        Game gameFetched = dao.find(gameWaiting.getId().toString());
+        assertEquals(gameWaiting, gameFetched);
+        assertEquals(3, dao.list().size());
     }
 
     @Test

@@ -69,7 +69,7 @@ public class Guess {
         style.setUseClassName(false);
         style.setUseIdentityHashCode(false);
 
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this, style)
                 .append("near", near)
                 .append("exact", exact)
                 .append("guess", guess)

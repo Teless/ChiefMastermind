@@ -1,10 +1,14 @@
 package com.business.dao;
 
 import com.domain.Game;
+import com.domain.GameStatus;
+import com.domain.User;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.UpdateOperations;
+import org.mongodb.morphia.query.UpdateResults;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -35,8 +39,17 @@ public class GameDaoImpl implements GameDao {
     }
 
     @Override
-    public boolean joinGame(String userName, String gameId) {
-        return false;
+    public boolean joinGame(User user, String gameId) {
+        UpdateOperations<Game> updateOperation = datastore.createUpdateOperations(Game.class)
+                .add("users", user, false);
+
+        Query<Game> query = datastore.createQuery(Game.class)
+                .field("id").equal(new ObjectId(gameId))
+                .field("status").equal(GameStatus.WAITING);
+
+        UpdateResults result = datastore.update(query, updateOperation);
+
+        return result.getUpdatedCount() == 1;
     }
 
     @Override
