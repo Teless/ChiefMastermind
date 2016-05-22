@@ -10,6 +10,8 @@
 - <a href="#playingTheGame">Playing the game</a>
   - <a href="#guessStatus">Guess Status</a>
   - <a href="#secrectCode">Secret Code</a>
+- <a href="#install">Install</a>
+  - <a href="#dbConfig">DB Configuration</a>
 
 This an Mastermind API implentation in Java. Don't know how the game works? Check the <a href="https://en.wikipedia.org/wiki/Mastermind_(board_game)#Gameplay_and_rules">Rules<a/>
 
@@ -160,7 +162,7 @@ Join a game response contains the following states:
 ```
 
 <h2 id="playingTheGame">Playing the game</h2>
-	| Parameters  | POST /game/guess |
+| Parameters  | POST /game/guess |
 | ------------- | ------------- |
 | code  | guess code  |
 | userName  | user name  |
@@ -173,6 +175,7 @@ Join a game response contains the following states:
   "code": "{submited guess code}",
   "status": "{status}"
 }
+```
 
 <h3 id="guessStatus">Guess status</h3>
 A guess can have the following status:
@@ -192,3 +195,15 @@ The secrect code is generated base on the "secrectSize" parameter (if a quick ga
 - output = "1032"
 
 The number can repeat inside the secret
+
+<h2 id="install">Install</h2>
+To run the server you need:
+- JDK8 installed
+- Apache tomcat 7.x
+- MongoDB 3.x
+
+<h3 id="dbConfig">DB Configuration</h3>
+The API uses a mongoDB server, by default the applications connects to "localhost:27017" and creates the db "ChiefMastermind". If you need to change the connection you can edit the file "src/main/resources/development.properties" and change the configuration
+
+* The system was set up to run in two possible configurations: development and production, if you want to change the system state you need to edit the file "src/main/webapp/WEB-INF/web.xml" and change the property "br.com.caelum.vraptor.environment" to production. Doing that the system will load the production.properties instead of development.properties
+
