@@ -6,6 +6,8 @@ import org.bson.types.ObjectId;
 
 public interface PlayerDao extends Dao<Player> {
 
+    Player find(String userName, String gameId);
+
     boolean addGuess(Guess guess, ObjectId playerId, ObjectId gameId);
 
 }

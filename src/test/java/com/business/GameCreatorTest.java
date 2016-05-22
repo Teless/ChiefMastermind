@@ -51,7 +51,7 @@ public class GameCreatorTest {
 
     @Test
     public void testCreateQuickGame() throws Exception {
-        when(gameKeyGeneratorMock.generateGamekey()).thenReturn("gameKey");
+        when(gameKeyGeneratorMock.generateGameKey()).thenReturn("gameKey");
         when(secretGeneratorMock.newSecret(Game.DEFAULT_COLORS_COUNT, Game.DEFAULT_SECRET_SIZE))
                 .thenReturn("secret");
 
@@ -78,7 +78,7 @@ public class GameCreatorTest {
 
     @Test
     public void testCreateQuickMultiplayerGame() throws Exception {
-        when(gameKeyGeneratorMock.generateGamekey()).thenReturn("gameKey");
+        when(gameKeyGeneratorMock.generateGameKey()).thenReturn("gameKey");
         when(secretGeneratorMock.newSecret(Game.DEFAULT_COLORS_COUNT, Game.DEFAULT_SECRET_SIZE))
                 .thenReturn("secret");
 
@@ -105,7 +105,7 @@ public class GameCreatorTest {
 
     @Test
     public void testCreateNewGame() throws Exception {
-        when(gameKeyGeneratorMock.generateGamekey()).thenReturn("gameKey");
+        when(gameKeyGeneratorMock.generateGameKey()).thenReturn("gameKey");
         when(secretGeneratorMock.newSecret(11, 9)).thenReturn("secret");
 
         Game game = gameCreator.createNewGame("Rafael", 3, 5, 7, 9, 11, GameStatus.WAITING);
@@ -131,7 +131,7 @@ public class GameCreatorTest {
 
     @Test
     public void testCreateNewGameValidRunning() throws Exception {
-        when(gameKeyGeneratorMock.generateGamekey()).thenReturn("gameKey");
+        when(gameKeyGeneratorMock.generateGameKey()).thenReturn("gameKey");
         when(secretGeneratorMock.newSecret(11, 9)).thenReturn("secret");
 
         Game game = gameCreator.createNewGame("Rafael", 1, 5, 7, 9, 11, GameStatus.MASTER_MINDING);

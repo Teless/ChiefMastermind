@@ -46,17 +46,17 @@ public class GameStatusManager {
         Game game = gameDao.find(gameId);
         if (game == null) {
             status = StartGameStatus.GAME_NOT_FOUND;
-            logger.info("An attempt to start the game: {} (key: {}) was made, but the game couldn't be found",
+            logger.warn("An attempt to start the game: {} (key: {}) was made, but the game couldn't be found",
                     gameId, gameKey);
 
         } else if (gameWasNotWaiting(game)) {
             status = StartGameStatus.GAME_WAS_NOT_ON_WAIT;
-            logger.info("An attempt to start the game: {} (key: {}) was made, but the game status was: {}",
+            logger.warn("An attempt to start the game: {} (key: {}) was made, but the game status was: {}",
                     gameId, gameKey, game.getStatus());
 
         } else if (!gameyKeyMatch(gameKey, game)) {
             status = StartGameStatus.WRONG_GAME_KEY;
-            logger.info("An attempt to start the game: {} (key: {}) was made, but the key was wrong", gameId, gameKey);
+            logger.warn("An attempt to start the game: {} (key: {}) was made, but the key was wrong", gameId, gameKey);
 
         } else {
             throw new UnexpectedException("For an unknown motive, it was not possible to start the game of id: "

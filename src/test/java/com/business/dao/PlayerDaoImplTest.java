@@ -1,6 +1,5 @@
 package com.business.dao;
 
-import com.business.GameKeyGenerator;
 import com.domain.Game;
 import com.domain.GameStatus;
 import com.domain.Guess;
@@ -34,7 +33,7 @@ public class PlayerDaoImplTest {
     private Datastore datastore;
 
     private Game gameRunning;
-    private Player playerMasterMinding;
+    private Player playerRunning;
 
     @Before
     public void setUp() throws Exception {
@@ -50,30 +49,47 @@ public class PlayerDaoImplTest {
         gameRunning.setPlayersCount(1);
         gameDao.save(gameRunning);
 
-        playerMasterMinding = new Player("Initial waiting player");
-        playerMasterMinding.setGame(gameRunning);
-        playerDao.save(playerMasterMinding);
+        playerRunning = new Player("Initial waiting player");
+        playerRunning.setGame(gameRunning);
+        playerDao.save(playerRunning);
 
-        gameRunning.setPlayers(Collections.singletonList(playerMasterMinding));
+        gameRunning.setPlayers(Collections.singletonList(playerRunning));
         gameDao.save(gameRunning);
         //</editor-fold>
-
     }
 
     @Test
     public void testList() throws Exception {
-        assertEquals(Collections.singletonList(playerMasterMinding), playerDao.list());
+        assertEquals(Collections.singletonList(playerRunning), playerDao.list());
     }
 
     @Test
     public void testFind() throws Exception {
-        Player playerFetched = playerDao.find(playerMasterMinding.getId().toString());
-        assertEquals(playerMasterMinding, playerFetched);
+        Player playerFetched = playerDao.find(playerRunning.getId().toString());
+        assertEquals(playerRunning, playerFetched);
+    }
+
+    @Test
+    public void testFindWithGame() throws Exception {
+        Player playerFetched = playerDao.find(playerRunning.getName(), gameRunning.getId().toString());
+        assertEquals(playerRunning, playerFetched);
+    }
+
+    @Test
+    public void testFindWithInvalidGame() throws Exception {
+        Player playerFetched = playerDao.find(playerRunning.getName(), "012345678901234567890123");
+        assertNull(playerFetched);
+    }
+
+    @Test
+    public void testFindWithGameInvalidUser() throws Exception {
+        Player playerFetched = playerDao.find("ow", gameRunning.getId().toString());
+        assertNull(playerFetched);
     }
 
     @Test(expected = DuplicateKeyException.class)
     public void saveDuplicatedName() throws Exception {
-        Player player = new Player(playerMasterMinding.getName());
+        Player player = new Player(playerRunning.getName());
         player.setGame(gameRunning);
         playerDao.save(player);
     }
@@ -85,13 +101,13 @@ public class PlayerDaoImplTest {
         guess.setExact(3);
         guess.setNear(2);
 
-        boolean result = playerDao.addGuess(guess, playerMasterMinding.getId(), gameRunning.getId());
+        boolean result = playerDao.addGuess(guess, playerRunning.getId(), gameRunning.getId());
         assertTrue(result);
 
-        playerMasterMinding.setRound(1);
-        playerMasterMinding.setGuesses(Collections.singletonList(guess));
-        Player playerFound = playerDao.find(playerMasterMinding.getId().toString());
+        playerRunning.setRound(1);
+        playerRunning.setGuesses(Collections.singletonList(guess));
+        Player playerFound = playerDao.find(playerRunning.getId().toString());
 
-        assertEquals(playerMasterMinding, playerFound);
+        assertEquals(playerRunning, playerFound);
     }
 }

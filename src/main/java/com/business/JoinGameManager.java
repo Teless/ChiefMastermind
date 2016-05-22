@@ -57,14 +57,14 @@ public class JoinGameManager {
         Game game = gameDao.find(gameId);
         if (game == null) {
             status = JoinGameStatus.GAME_NOT_FOUND;
-            logger.info("User: {} tried to enter a game ({}) that couldn't be found", userName, gameId);
+            logger.warn("User: {} tried to enter a game ({}) that couldn't be found", userName, gameId);
         } else if (!game.getStatus().equals(GameStatus.WAITING)) {
             status = JoinGameStatus.GAME_WAS_NOT_ON_WAIT;
-            logger.info("User: {} tried to enter the game: {} but the game's status was: ",
+            logger.warn("User: {} tried to enter the game: {} but the game's status was: ",
                     userName, gameId, game.getStatus());
         } else if (game.getPlayersCount() >= game.getPlayersLimit()) {
             status = JoinGameStatus.GAME_FULL;
-            logger.info("User: {} tried to enter the game: {} but it was full", userName, gameId);
+            logger.warn("User: {} tried to enter the game: {} but it was full", userName, gameId);
         } else {
             throw new UnexpectedException("For an unknown motive, it was not possible to let the player: "
                     + userName + " to join the game of id: " + gameId);

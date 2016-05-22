@@ -3,7 +3,6 @@ package com.business.dao;
 import com.domain.MasterEntity;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.query.Query;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
@@ -27,11 +26,11 @@ public abstract class DaoImpl<T extends MasterEntity> implements Dao<T> {
 
     @Override
     public T find(String id) {
-        List<T> games = datastore.createQuery(getGenericType())
+        List<T> result = datastore.createQuery(getGenericType())
                 .field("id").equal(new ObjectId(id))
                 .asList();
 
-        return games.isEmpty() ? null : games.get(0);
+        return result.isEmpty() ? null : result.get(0);
     }
 
     @Override

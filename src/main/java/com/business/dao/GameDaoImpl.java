@@ -54,5 +54,41 @@ public class GameDaoImpl extends DaoImpl<Game> implements GameDao {
         return updateResults.getUpdatedCount() == 1;
     }
 
+    @Override
+    public boolean incRound(ObjectId id) {
+        UpdateOperations<Game> updateOperation = datastore.createUpdateOperations(Game.class)
+                .inc("round");
+
+        Query<Game> query = datastore.createQuery(Game.class)
+                .field("id").equal(id);
+
+        UpdateResults updateResults = datastore.update(query, updateOperation);
+        return updateResults.getUpdatedCount() == 1;
+    }
+
+    @Override
+    public boolean resetRoundGuesses(ObjectId id) {
+        UpdateOperations<Game> updateOperation = datastore.createUpdateOperations(Game.class)
+                .set("roundGuesses", 0);
+
+        Query<Game> query = datastore.createQuery(Game.class)
+                .field("id").equal(id);
+
+        UpdateResults updateResults = datastore.update(query, updateOperation);
+        return updateResults.getUpdatedCount() == 1;
+    }
+
+    @Override
+    public boolean incRoundGuesses(ObjectId id) {
+        UpdateOperations<Game> updateOperation = datastore.createUpdateOperations(Game.class)
+                .inc("roundGuesses");
+
+        Query<Game> query = datastore.createQuery(Game.class)
+                .field("id").equal(id);
+
+        UpdateResults updateResults = datastore.update(query, updateOperation);
+        return updateResults.getUpdatedCount() == 1;
+    }
+
 
 }

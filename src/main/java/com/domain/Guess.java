@@ -5,11 +5,21 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.StandardToStringStyle;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.beans.Transient;
+
 public class Guess {
 
     private int near;
     private int exact;
     private String code;
+    private transient GuessStatus status;
+
+    public static Guess emptyGuess(GuessStatus status) {
+        Guess guess = new Guess();
+        guess.setStatus(status);
+
+        return guess;
+    }
 
     public int getNear() {
         return near;
@@ -35,6 +45,14 @@ public class Guess {
         this.code = code;
     }
 
+    public GuessStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(GuessStatus status) {
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object o) {
         boolean equals;
@@ -50,6 +68,7 @@ public class Guess {
                     .append(code, that.code)
                     .append(near, that.near)
                     .append(exact, that.exact)
+                    .append(status, that.status)
                     .isEquals();
         }
 
@@ -73,6 +92,7 @@ public class Guess {
                 .append("near", near)
                 .append("exact", exact)
                 .append("code", code)
+                .append("status", status)
                 .toString();
     }
 }

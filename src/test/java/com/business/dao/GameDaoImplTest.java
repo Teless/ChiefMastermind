@@ -216,4 +216,40 @@ public class GameDaoImplTest {
         assertFalse("The game started", started);
         assertEquals(Arrays.asList(gameWaiting, gameRunning, gameFinished), gameDao.list());
     }
+
+    @Test
+    public void testIncRound() throws Exception {
+        gameRunning.setRound(0);
+        gameDao.save(gameRunning);
+
+        boolean incremented = gameDao.incRound(gameRunning.getId());
+        assertTrue(incremented);
+
+        Game fetchedGame = gameDao.find(gameRunning.getId().toString());
+        assertEquals(1, fetchedGame.getRound());
+    }
+
+    @Test
+    public void testResetRoundGuesses() throws Exception {
+        gameRunning.setRoundGuesses(4);
+        gameDao.save(gameRunning);
+
+        boolean incremented = gameDao.resetRoundGuesses(gameRunning.getId());
+        assertTrue(incremented);
+
+        Game fetchedGame = gameDao.find(gameRunning.getId().toString());
+        assertEquals(0, fetchedGame.getRoundGuesses());
+    }
+
+    @Test
+    public void testIncRoudGuesses() throws Exception {
+        gameRunning.setRoundGuesses(2);
+        gameDao.save(gameRunning);
+
+        boolean incremented = gameDao.incRoundGuesses(gameRunning.getId());
+        assertTrue(incremented);
+
+        Game fetchedGame = gameDao.find(gameRunning.getId().toString());
+        assertEquals(3, fetchedGame.getRoundGuesses());
+    }
 }

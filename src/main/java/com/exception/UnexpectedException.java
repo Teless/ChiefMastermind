@@ -9,4 +9,7 @@ public class UnexpectedException extends ChiefMastermindRuntimeException {
         super(message);
     }
 
+    public UnexpectedException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

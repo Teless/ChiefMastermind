@@ -18,6 +18,10 @@ public class DatastoreFactory {
     private final MongoClient mongoClient;
     private final SystemProperties systemProperties;
 
+    /**
+     * @deprecated CDI
+     */
+    @Deprecated
     public DatastoreFactory() {
         this(null);
     }
@@ -26,7 +30,7 @@ public class DatastoreFactory {
     public DatastoreFactory(SystemProperties systemProperties) {
         this.systemProperties = systemProperties;
 
-        if (systemProperties != null) {
+        if (systemProperties == null) {
             morphia = null;
             mongoClient = null;
         } else {

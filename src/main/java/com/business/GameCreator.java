@@ -59,7 +59,7 @@ public class GameCreator {
         validateGameParameters(playersLimit, roundsLimit, positions, secretSize, colorsCount, status);
 
         Game game = new Game();
-        game.setGameKey(gameKeyGenerator.generateGamekey());
+        game.setGameKey(gameKeyGenerator.generateGameKey());
         game.setPlayersLimit(playersLimit);
         game.setRoundsLimit(roundsLimit);
         game.setPositions(positions);

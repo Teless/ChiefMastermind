@@ -20,6 +20,7 @@ public class Game implements MasterEntity {
     private int playersCount;
     private int roundsLimit;
     private int round;
+    private int roundGuesses;
     private int positions;
     private String secret;
 
@@ -86,6 +87,14 @@ public class Game implements MasterEntity {
         this.round = round;
     }
 
+    public int getRoundGuesses() {
+        return roundGuesses;
+    }
+
+    public void setRoundGuesses(int roundGuesses) {
+        this.roundGuesses = roundGuesses;
+    }
+
     public int getPositions() {
         return positions;
     }
@@ -132,6 +141,7 @@ public class Game implements MasterEntity {
                     .append(playersCount, that.playersCount)
                     .append(roundsLimit, that.roundsLimit)
                     .append(round, that.round)
+                    .append(roundGuesses, that.roundGuesses)
                     .append(positions, that.positions)
                     .append(secret, that.secret)
                     .append(gameKey, that.gameKey)
@@ -162,6 +172,7 @@ public class Game implements MasterEntity {
                 .append("playersCount", playersCount)
                 .append("roundsLimit", roundsLimit)
                 .append("round", round)
+                .append("roundGuesses", roundGuesses)
                 .append("positions", positions)
                 .append("secret", secret)
                 .append("gameKey", gameKey)

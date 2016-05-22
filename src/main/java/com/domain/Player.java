@@ -13,8 +13,8 @@ import java.util.List;
 @Entity("players")
 @Indexes({
         @Index(fields = {
-                @Field(value = "game", type = IndexType.ASC),
-                @Field(value = "name", type = IndexType.ASC)
+                @Field(value = "name", type = IndexType.ASC),
+                @Field(value = "game", type = IndexType.ASC)
         }, options = @IndexOptions(
                 unique = true
         ))

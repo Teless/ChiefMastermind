@@ -5,7 +5,7 @@ import java.security.SecureRandom;
 
 public class GameKeyGenerator {
 
-    public String generateGamekey() {
+    public String generateGameKey() {
         SecureRandom random = new SecureRandom();
         return new BigInteger(130, random).toString(32);
     }
