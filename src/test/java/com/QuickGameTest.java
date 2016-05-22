@@ -25,7 +25,6 @@ import java.util.Collections;
 import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.when;
 
-// TODO: 5/22/16  complete
 @RunWith(CdiRunner.class)
 @AdditionalClasses({
         GameCreator.class,
@@ -85,6 +84,8 @@ public class QuickGameTest {
         Guess guess1 = guessesManager.guess("00112233", "Rafael", game.getId().toString());
         Guess guess2 = guessesManager.guess("00002233", "Rafael", game.getId().toString());
 
+        Guess intruderGuess = guessesManager.guess("00002233", "Intruder", game.getId().toString());
+
         Guess guessInvalid1 = guessesManager.guess("aaaa", "Rafael", game.getId().toString());
         Guess guessInvalid2 = guessesManager.guess("00002233", "Invalid", game.getId().toString());
         Guess guessInvalid3 = guessesManager.guess("00002233", "Rafael", new ObjectId().toString());
@@ -118,12 +119,16 @@ public class QuickGameTest {
         expectedWinnerGuess.setStatus(GuessStatus.SOLVED);
         expectedWinnerGuess.setCode("00001111");
 
+        Guess expectedIntruderGuess = Guess.emptyGuess(GuessStatus.NOT_IN_THE_GAME);
+        expectedIntruderGuess.setCode("00002233");
+
         assertEquals(expectedGuess1, guess1);
         assertEquals(expectedGuess2, guess2);
         assertEquals(expectedInvalidGuess1, guessInvalid1);
         assertEquals(expectedInvalidGuess2, guessInvalid2);
         assertEquals(expectedInvalidGuess3, guessInvalid3);
         assertEquals(expectedWinnerGuess, winnerGuess);
+        assertEquals(expectedIntruderGuess, intruderGuess);
         //</editor-fold>
 
         Game finalGameState = gameDao.find(game.getId().toString());
