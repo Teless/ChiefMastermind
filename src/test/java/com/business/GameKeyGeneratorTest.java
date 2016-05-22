@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(CdiRunner.class)
 public class GameKeyGeneratorTest {

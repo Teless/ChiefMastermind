@@ -4,7 +4,6 @@ import com.business.dao.GameDao;
 import com.business.dao.PlayerDao;
 import com.domain.*;
 import org.bson.types.ObjectId;
-import org.jboss.weld.exceptions.UnsupportedOperationException;
 import org.jglue.cdiunit.CdiRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,10 +11,9 @@ import org.mockito.Mock;
 
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
-
 import java.util.Date;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(CdiRunner.class)

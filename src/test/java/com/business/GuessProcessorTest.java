@@ -1,7 +1,6 @@
 package com.business;
 
 import com.domain.Guess;
-import com.domain.GuessStatus;
 import org.jglue.cdiunit.CdiRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;

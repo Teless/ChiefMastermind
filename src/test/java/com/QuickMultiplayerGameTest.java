@@ -7,7 +7,6 @@ import com.business.dao.PlayerDao;
 import com.business.dao.PlayerDaoImpl;
 import com.domain.*;
 import com.mock.DatastoreFactoryMock;
-import org.bson.types.ObjectId;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.CdiRunner;
 import org.junit.Before;
@@ -19,7 +18,6 @@ import org.mongodb.morphia.Datastore;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import java.util.Arrays;
-import java.util.Collections;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.when;

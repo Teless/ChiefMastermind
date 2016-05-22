@@ -6,10 +6,8 @@ import com.domain.Game;
 import com.domain.GameStatus;
 import com.domain.JoinGameStatus;
 import com.domain.Player;
-import com.exception.UnexpectedException;
 import com.mock.DatastoreFactoryMock;
 import com.mongodb.DuplicateKeyException;
-import com.mongodb.MongoClient;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.CdiRunner;
 import org.junit.Before;
@@ -18,10 +16,9 @@ import org.junit.runner.RunWith;
 import org.mongodb.morphia.Datastore;
 
 import javax.inject.Inject;
-
 import java.util.Collections;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(CdiRunner.class)
 @AdditionalClasses({GameDaoImpl.class, DatastoreFactoryMock.class})

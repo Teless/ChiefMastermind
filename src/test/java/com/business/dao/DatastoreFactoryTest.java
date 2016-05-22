@@ -10,7 +10,7 @@ import org.mongodb.morphia.Datastore;
 
 import javax.inject.Inject;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(CdiRunner.class)
 @AdditionalClasses(SystemPropertiesMock.class)

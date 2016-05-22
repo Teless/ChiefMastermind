@@ -1,13 +1,14 @@
 package com.business.dao;
 
-import com.domain.*;
+import com.domain.Game;
+import com.domain.GameStatus;
+import com.domain.Player;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 import org.mongodb.morphia.query.UpdateResults;
 
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
 public class GameDaoImpl extends DaoImpl<Game> implements GameDao {
