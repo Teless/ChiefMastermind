@@ -41,6 +41,7 @@ public class GuessesManagerTest {
         Game game = new Game();
         game.setRound(0);
         game.setSecret("0011");
+        game.setPlayersCount(2);
         game.setStatus(GameStatus.MASTER_MINDING);
         game.setId(new ObjectId(new Date()));
 
@@ -67,6 +68,42 @@ public class GuessesManagerTest {
         expected.setStatus(GuessStatus.SOLVED);
 
         assertEquals(expected, guess);
+        assertEquals(GameStatus.SOLVED, game.getStatus());
+    }
+
+    @Test
+    public void testWinningGuess() throws Exception {
+        Game game = new Game();
+        game.setRound(0);
+        game.setSecret("0011");
+        game.setPlayersCount(1);
+        game.setStatus(GameStatus.MASTER_MINDING);
+        game.setId(new ObjectId(new Date()));
+
+        Player player = new Player();
+        player.setGame(game);
+        player.setRound(0);
+
+        Guess outputGuess = new Guess();
+        outputGuess.setCode("0011");
+        outputGuess.setExact(4);
+        outputGuess.setNear(0);
+
+        when(playerDaoMock.find("userName", "gameId")).thenReturn(player);
+        when(guessProcessorMock.processGuess("0011", "0011")).thenReturn(outputGuess);
+
+        Guess guess = guessesManager.guess("0011", "userName", "gameId");
+
+        verify(playerDaoMock, times(1)).find("userName", "gameId");
+
+        Guess expected = new Guess();
+        expected.setCode("0011");
+        expected.setExact(4);
+        expected.setNear(0);
+        expected.setStatus(GuessStatus.SOLVED);
+
+        assertEquals(expected, guess);
+        assertEquals(GameStatus.FINISHED, game.getStatus());
     }
 
     @Test
@@ -74,6 +111,7 @@ public class GuessesManagerTest {
         Game game = new Game();
         game.setRound(0);
         game.setSecret("0011");
+        game.setPlayersCount(2);
         game.setStatus(GameStatus.MASTER_MINDING);
         game.setId(new ObjectId(new Date()));
 
@@ -103,11 +141,12 @@ public class GuessesManagerTest {
     }
 
     @Test
-    public void testGuessFinishedGame() throws Exception {
+    public void testGuessSolvedGame() throws Exception {
         Game game = new Game();
         game.setRound(0);
         game.setSecret("0011");
-        game.setStatus(GameStatus.FINISHED);
+        game.setPlayersCount(2);
+        game.setStatus(GameStatus.SOLVED);
         game.setId(new ObjectId(new Date()));
 
         Player player = new Player();
@@ -165,6 +204,27 @@ public class GuessesManagerTest {
         verify(playerDaoMock, times(1)).find("userName", "gameId");
 
         Guess expected = Guess.emptyGuess(GuessStatus.GAME_IS_WAITING_FOR_MORE);
+        expected.setCode("code");
+
+        assertEquals(expected, guess);
+    }
+
+    @Test
+    public void testGuessGameIsFinish() throws Exception {
+        Game game = new Game();
+        game.setId(new ObjectId(new Date()));
+        game.setStatus(GameStatus.FINISHED);
+
+        Player player = new Player();
+        player.setGame(game);
+
+        when(playerDaoMock.find("userName", "gameId")).thenReturn(player);
+
+        Guess guess = guessesManager.guess("code", "userName", "gameId");
+
+        verify(playerDaoMock, times(1)).find("userName", "gameId");
+
+        Guess expected = Guess.emptyGuess(GuessStatus.GAME_HAS_ENDED);
         expected.setCode("code");
 
         assertEquals(expected, guess);

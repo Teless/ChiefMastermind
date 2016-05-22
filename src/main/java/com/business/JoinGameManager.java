@@ -28,6 +28,7 @@ public class JoinGameManager {
     }
 
     // TODO: 5/22/16 add to documentation
+    // TODO: 5/22/16 handler duplicateKeyExpcetion
     public JoinGameStatus joinGame(String userName, String gameId) throws DuplicateKeyException {
         Game game = gameDao.find(gameId);
 
@@ -45,6 +46,7 @@ public class JoinGameManager {
                 logger.info("User: {} joined the game: {}", userName, gameId);
             } else {
                 status = processJoinGameStatusError(userName, gameId);
+                playerDao.remove(player.getId());
             }
         }
 

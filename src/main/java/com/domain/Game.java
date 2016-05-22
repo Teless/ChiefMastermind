@@ -87,12 +87,20 @@ public class Game implements MasterEntity {
         this.round = round;
     }
 
+    public void incRound() {
+        ++round;
+    }
+
     public int getRoundGuesses() {
         return roundGuesses;
     }
 
     public void setRoundGuesses(int roundGuesses) {
         this.roundGuesses = roundGuesses;
+    }
+
+    public void incRoundGuesses() {
+        ++roundGuesses;
     }
 
     public int getPositions() {

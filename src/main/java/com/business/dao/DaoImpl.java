@@ -1,8 +1,10 @@
 package com.business.dao;
 
 import com.domain.MasterEntity;
+import com.mongodb.WriteResult;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.query.Query;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
@@ -36,6 +38,15 @@ public abstract class DaoImpl<T extends MasterEntity> implements Dao<T> {
     @Override
     public List<T> list() {
         return datastore.createQuery(getGenericType()).asList();
+    }
+
+    @Override
+    public boolean remove(ObjectId id) {
+        Query<T> query = datastore.createQuery(getGenericType())
+                .field("id").equal(id);
+
+        WriteResult result = datastore.delete(query);
+        return result.isUpdateOfExisting();
     }
 
     private Class<T> getGenericType() {

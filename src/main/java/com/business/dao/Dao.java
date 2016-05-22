@@ -13,4 +13,6 @@ public interface Dao<T extends MasterEntity> {
 
     List<T> list();
 
+    boolean remove(ObjectId id);
+
 }

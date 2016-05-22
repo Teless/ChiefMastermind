@@ -77,7 +77,6 @@ public class GameCreator {
         gameDao.save(game);
 
         logger.info("The user: {} created a game with the following configurations: {}", userName, game);
-        // TODO: 5/21/16 get mongodb exceptions in interceptor
 
         return game;
     }

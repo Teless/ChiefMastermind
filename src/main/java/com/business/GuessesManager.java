@@ -64,6 +64,11 @@ public class GuessesManager {
             logger.warn("Player: {} tried to guess before the game ({}) started.",
                     player.getName(), game.getId().toString());
 
+        } else if (game.getStatus() == GameStatus.FINISHED) {
+            guess = Guess.emptyGuess(GAME_HAS_ENDED);
+            logger.warn("Player: {} tried to guess before the game ({}) started.",
+                    player.getName(), game.getId().toString());
+
         } else if (player.getRound() != game.getRound()) {
             guess = Guess.emptyGuess(WAITING_OTHER_PLAYERS_GUESSES);
             logger.warn("Player: {} tried to guess before other players finished the round on game: {}",
@@ -86,7 +91,8 @@ public class GuessesManager {
         Guess guess = guessProcessor.processGuess(code, game.getSecret());
 
         if (guess.getExact() == game.getSecret().length()) {
-            // TODO: 5/22/16  mark in the game all that solved
+            game.setStatus(GameStatus.SOLVED);
+
             guess.setStatus(SOLVED);
             logger.info("Exact guess ({}) from player: {} on game: {}", code, player.getName(),
                     game.getId().toString());
@@ -110,22 +116,29 @@ public class GuessesManager {
     }
 
     private void updateGameRound(Game game) {
+        Mutex mutex = null;
         try {
-            Mutex mutex = lockPerGame.get(game.getId().toString());
+            mutex = lockPerGame.get(game.getId().toString());
             mutex.acquire();
 
-            try {
-                if (game.getRoundGuesses() == game.getPlayersCount() - 1) {
-                    gameDao.incRound(game.getId());
-                    gameDao.resetRoundGuesses(game.getId());
-                } else {
-                    gameDao.incRoundGuesses(game.getId());
+            if (game.getRoundGuesses() == game.getPlayersCount() - 1) {
+                game.incRound();
+                game.setRoundGuesses(0);
+
+                if (game.getStatus() == GameStatus.SOLVED) {
+                    game.setStatus(GameStatus.FINISHED);
                 }
-            } finally {
-                mutex.release();
+            } else {
+                game.incRoundGuesses();
             }
+
+            gameDao.save(game);
         } catch (ExecutionException | InterruptedException e) {
             throw new UnexpectedException("Error while trying to update game round", e);
+        } finally {
+            if (mutex != null) {
+                mutex.release();
+            }
         }
     }
 

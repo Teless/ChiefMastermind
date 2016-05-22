@@ -10,10 +10,4 @@ public interface GameDao extends Dao<Game> {
 
     boolean startGame(String gameKey, String gameId);
 
-    boolean incRound(ObjectId id);
-
-    boolean resetRoundGuesses(ObjectId id);
-
-    boolean incRoundGuesses(ObjectId id);
-
 }

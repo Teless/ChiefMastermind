@@ -4,7 +4,6 @@ import com.business.dao.GameDaoImpl;
 import com.business.dao.PlayerDaoImpl;
 import com.domain.*;
 import com.mock.DatastoreFactoryMock;
-import org.bson.types.ObjectId;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.CdiRunner;
 import org.junit.Before;
@@ -14,12 +13,8 @@ import org.mongodb.morphia.Datastore;
 
 import javax.inject.Inject;
 import java.util.Collections;
-import java.util.Date;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(CdiRunner.class)
 @AdditionalClasses({
@@ -53,6 +48,7 @@ public class GuessesManagerIT {
         //<editor-fold desc="Set waiting game">
         game = new Game();
         game.setSecret("0011");
+        game.setPlayersCount(2);
         game.setStatus(GameStatus.MASTER_MINDING);
         game.setPlayers(Collections.emptyList());
         gameDao.save(game);
@@ -77,6 +73,10 @@ public class GuessesManagerIT {
         expected.setStatus(GuessStatus.SOLVED);
 
         assertEquals(expected, guess);
+
+        Game fetchedGame = gameDao.find(this.game.getId().toString());
+        assertEquals(GameStatus.SOLVED, fetchedGame.getStatus());
+        assertEquals(1, fetchedGame.getRoundGuesses());
     }
 
     @Test
@@ -90,11 +90,15 @@ public class GuessesManagerIT {
         expected.setStatus(GuessStatus.VALID_GUESS);
 
         assertEquals(expected, guess);
+
+        Game fetchedGame = gameDao.find(this.game.getId().toString());
+        assertEquals(GameStatus.MASTER_MINDING, fetchedGame.getStatus());
+        assertEquals(1, fetchedGame.getRoundGuesses());
     }
 
     @Test
-    public void testGuessFinishedGame() throws Exception {
-        game.setStatus(GameStatus.FINISHED);
+    public void testGuessSolvedGame() throws Exception {
+        game.setStatus(GameStatus.SOLVED);
         gameDao.save(game);
 
         Guess guess = guessesManager.guess("0001", player.getName(), game.getId().toString());
@@ -106,6 +110,30 @@ public class GuessesManagerIT {
         expected.setStatus(GuessStatus.VALID_GUESS);
 
         assertEquals(expected, guess);
+
+        Game fetchedGame = gameDao.find(this.game.getId().toString());
+        assertEquals(GameStatus.SOLVED, fetchedGame.getStatus());
+        assertEquals(1, fetchedGame.getRoundGuesses());
+    }
+
+    @Test
+    public void testWinningGuess() throws Exception {
+        game.setPlayersCount(1);
+        gameDao.save(game);
+
+        Guess guess = guessesManager.guess("0011", player.getName(), game.getId().toString());
+
+        Guess expected = new Guess();
+        expected.setCode("0011");
+        expected.setExact(4);
+        expected.setNear(0);
+        expected.setStatus(GuessStatus.SOLVED);
+
+        assertEquals(expected, guess);
+
+        Game fetchedGame = gameDao.find(this.game.getId().toString());
+        assertEquals(GameStatus.FINISHED, fetchedGame.getStatus());
+        assertEquals(0, fetchedGame.getRoundGuesses());
     }
 
 }

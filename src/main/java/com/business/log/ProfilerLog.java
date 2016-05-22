@@ -5,6 +5,6 @@ import org.slf4j.LoggerFactory;
 
 public class ProfilerLog {
 
-    public static final Logger logger = LoggerFactory.getLogger("PROFILE_LOG");
+    public static final Logger LOGGER = LoggerFactory.getLogger("PROFILE_LOG");
 
 }

@@ -17,7 +17,7 @@ public class GameKeyGeneratorTest {
     @Test
     public void generateGameKey() throws Exception {
         String secret = gameKeyGenerator.generateGameKey();
-        assertEquals(26, secret.length());
+        assertEquals(24, secret.length());
     }
 
 }
