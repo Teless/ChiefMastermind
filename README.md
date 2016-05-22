@@ -26,11 +26,14 @@ This API allows you to create a game with the configurations of your choice:
 
 But if you want to quickly create a new the API exports two shorcuts methos
 
-<h3 id="quickGame">Quick Game</h3>
-| Parameters  | POST /game/quickGame |
-| ------------- | ------------- |
-| userName  | name of the player  |
-
+<h3 id="quickGame">POST /game/quickGame</h3>
+<b>Params</b>
+```
+{
+  "userName": "Player Name"
+}
+```
+<b>Response</b>
 ```
 {
   "id": "{for each game is generated a unique id}",
@@ -48,11 +51,14 @@ But if you want to quickly create a new the API exports two shorcuts methos
 }
 ```
 
-<h3 id="quickMultiplayerGame">Quick Multiplayer Game</h3>
-| Parameters  | POST /game/quickMultiplayerGame |
-| ------------- | ------------- |
-| userName  | name of the player  |
-
+<h3 id="quickMultiplayerGame">POST /game/quickMultiplayerGame</h3>
+<b>Params</b>
+```
+{
+  "userName": "Player Name"
+}
+```
+<b>Response</b>
 ```
 {
   "id": "{for each game is generated a unique id}",
@@ -70,16 +76,18 @@ But if you want to quickly create a new the API exports two shorcuts methos
 }
 ```
 
-<h3 id="customGame">Create a custom Game</h3>
-| Parameters  | POST /game/newGame |
-| ------------- | ------------- |
-| userName  | name of the player  |
-| playersLimit  | limit of players |
-| roundsLimit  | limit of rounds  |
-| positions  | number os positions |
-| secretSize  | secret size  |
-| colorsCount  | number of colors  |
-
+<h3 id="customGame">POST /game/newGame</h3>
+<b>Params</b>
+```
+{
+  "userName": "Player Name",
+  "playersLimit": 3,
+  "roundsLimit": 10,
+  "positions": 8,
+  "colorsCount": 8
+}
+```
+<b>Response</b>
 ```
 {
   "id": "{for each game is generated a unique id}",
@@ -97,15 +105,17 @@ But if you want to quickly create a new the API exports two shorcuts methos
 }
 ```
 
-<h3 id="joinGame">Join Game</h3>
-| Parameters  | POST /game/join |
-| ------------- | ------------- |
-| userName  | name of the player  |
-| gameId  | game id |
-
-
+<h3 id="joinGame">POST /game/join</h3>
+<b>Params</b>
 ```
-{Status}
+{
+  "userName": "Player Name",
+  "gameId": "57422988086d541a9812a74e"
+}
+```
+<b>Response</b>
+```
+Status
 ```
 
 Join a game method's response contains the following states:
@@ -121,16 +131,17 @@ A game can have 4 states:
 - SOLVED: a player solved the secret in the current round, the other players that didn't guess in the round still can try
 - FINISHED: at least on player found the solution or the game hit the rounds limit
 
-<h2 id="startGame">Start the Game</h2>
-
-| Parameters  | POST /game/start |
-| ------------- | ------------- |
-| gameKey  | key of the game |
-| gameId  | game id |
-
-
+<h2 id="startGame">POST /game/start</h2>
+<b>Params</b>
 ```
-{Status}
+{
+  "gameKey": "57422988086d544h3712a23t",
+  "gameId": "57422988086d541a9812a74e"
+}
+```
+<b>Response</b>
+```
+Status
 ```
 
 Join a game response contains the following states:
@@ -140,12 +151,14 @@ Join a game response contains the following states:
 - GAME_WAS_NOT_ON_WAIT: The game was not waiting for more players (is running, solved or finished)
 
 
-<h2 id="gameStatus">Find game status</h2>
-
-| Parameters  | POST /game/status |
-| ------------- | ------------- |
-| gameId  | game id  |
-
+<h2 id="gameStatus">POST /game/status</h2>
+<b>Params</b>
+```
+{
+  "gameId": "57422988086d541a9812a74e"
+}
+```
+<b>Response</b>
 ```
 {
   "id": "{for each game is generated a unique id}",
@@ -168,6 +181,15 @@ Join a game response contains the following states:
 | userName  | user name  |
 | gameId  | game id  |
 
+<b>Params</b>
+```
+{
+  "code": "00001111",
+  "userName": "Player name",
+  "gameId": "57422988086d541a9812a74e",
+}
+```
+<b>Response</b>
 ```
 {
   "near": {number of nears},
@@ -189,10 +211,10 @@ A guess can have the following status:
 
 <h3 id="secrectCode">Secret Code</h3>
 
-The secret code is generated base on the "secretSize" parameter (if a quick game is created the secretSize and "numbers of color" will be set to 8), a random String is created with the size of the "secretSize" parameter filled with caracter '0' -> 'secreSize' (exclusive), ex:
+The secret code is generated base on the "positionParameter" parameter (if a quick game is created the secretSize and "numbers of color" will be set to 8), a random String is created with the size of the "positionParameter" filled with caracter '0' -> 'position' (exclusive), ex:
 
-- secretSize = 4
-- output = "1032"
+- positionParameter = 4
+- output = "1032" (possible values: 0,1,2,3)
 
 The number can repeat inside the secret
 
