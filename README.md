@@ -42,12 +42,12 @@ But if you want to quickly create a new the API exports two shorcuts methos
   "status": "MASTER_MINDING",
   "playersLimit": 1,
   "playersCount": 1,
-  "roundsLimit": 8,
+  "roundsLimit": 2147483647,
   "round": 0,
   "roundGuesses": 0,
   "positions": 8,
   "players": [
-    "{userName}"
+    "Player Name"
   ]
 }
 ```
@@ -67,12 +67,12 @@ But if you want to quickly create a new the API exports two shorcuts methos
   "status": "WAITING",
   "playersLimit": 2,
   "playersCount": 1,
-  "roundsLimit": 8,
+  "roundsLimit": 2147483647,
   "round": 0,
   "roundGuesses": 0,
   "positions": 8,
   "players": [
-    "{userName}"
+    "Player Name"
   ]
 }
 ```
@@ -94,14 +94,14 @@ But if you want to quickly create a new the API exports two shorcuts methos
   "id": "{for each game is generated a unique id}",
   "gameKey": "{for each game is generate a key (visible by the creator of the game) used to start the game}",
   "status": "WAITING",
-  "playersLimit": {playersLimit},
+  "playersLimit": 10,
   "playersCount": 1,
-  "roundsLimit": {roundsLimit},
+  "roundsLimit": 10,
   "round": 0,
   "roundGuesses": 0,
-  "positions": {positions},
+  "positions": 8,
   "players": [
-    "{userName}"
+    "Player Name"
   ]
 }
 ```
