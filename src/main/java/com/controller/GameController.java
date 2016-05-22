@@ -31,13 +31,25 @@ public class GameController {
 
     @Post
     @Consumes(value = "application/json", options = WithoutRoot.class)
-    public void quickGame(String user) {
+    public void defaultQuickGame(String user) {
         // TODO: 21-May-16 log
     }
 
     @Post
     @Consumes(value = "application/json", options = WithoutRoot.class)
-    public void newGame(String user, int playerLimit, int roundLimit) {
+    public void quickGame(String user, int roundsLimit, int numberOfPositions) {
+        // TODO: 21-May-16 log
+    }
+
+    @Post
+    @Consumes(value = "application/json", options = WithoutRoot.class)
+    public void defaultNewGame(String user) {
+        // TODO: 21-May-16 log
+    }
+
+    @Post
+    @Consumes(value = "application/json", options = WithoutRoot.class)
+    public void newGame(String user, int playerLimit, int roundsLimit, int numberOfPositions) {
         // TODO: 21-May-16 log
     }
 
@@ -45,6 +57,13 @@ public class GameController {
     @Consumes(value = "application/json", options = WithoutRoot.class)
     public void join(String user, String gameId) {
         // TODO: 21-May-16 log
+    }
+
+    @Post
+    @Consumes(value = "application/json", options = WithoutRoot.class)
+    public void gameStatus(String gameId) {
+        // TODO: 21-May-16 log
+        // TODO: 5/21/16 exclude secret and gamekey
     }
 
     @Post

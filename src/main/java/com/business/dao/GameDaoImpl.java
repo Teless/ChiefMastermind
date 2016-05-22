@@ -1,14 +1,13 @@
 package com.business.dao;
 
-import com.domain.Game;
-import com.domain.GameStatus;
-import com.domain.Player;
-import com.exception.NoResultFound;
+import com.domain.*;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
+import org.mongodb.morphia.query.UpdateResults;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
 public class GameDaoImpl extends DaoImpl<Game> implements GameDao {
@@ -19,17 +18,11 @@ public class GameDaoImpl extends DaoImpl<Game> implements GameDao {
     }
 
     @Override
-    public boolean tryToJoinGame(Player player, String gameId) throws NoResultFound {
+    public boolean tryToJoinGame(Player player, Game game) {
         if (player.getId() == null) {
             throw new IllegalArgumentException("Player id was not defined");
         } else {
-            Game game = find(gameId);
-
-            if (game == null) {
-                throw new NoResultFound("game", gameId);
-            } else {
-                return joinGame(player, game);
-            }
+            return joinGame(player, game);
         }
     }
 
@@ -43,7 +36,8 @@ public class GameDaoImpl extends DaoImpl<Game> implements GameDao {
                 .field("id").equal(game.getId())
                 .field("status").equal(GameStatus.WAITING);
 
-        return datastore.update(query, updateOperation).getUpdatedCount() == 1;
+        UpdateResults updateResults = datastore.update(query, updateOperation);
+        return updateResults.getUpdatedCount() == 1;
     }
 
     @Override
@@ -56,7 +50,9 @@ public class GameDaoImpl extends DaoImpl<Game> implements GameDao {
                 .field("id").equal(new ObjectId(gameId))
                 .field("status").equal(GameStatus.WAITING);
 
-        return datastore.update(query, updateOperation).getUpdatedCount() == 1;
+        UpdateResults updateResults = datastore.update(query, updateOperation);
+        return updateResults.getUpdatedCount() == 1;
     }
+
 
 }

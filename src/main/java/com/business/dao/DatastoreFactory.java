@@ -7,13 +7,16 @@ import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
 @ApplicationScoped
 public class DatastoreFactory {
 
-    private final Datastore datastore;
+    private final Morphia morphia;
+    private final MongoClient mongoClient;
+    private final SystemProperties systemProperties;
 
     public DatastoreFactory() {
         this(null);
@@ -21,22 +24,25 @@ public class DatastoreFactory {
 
     @Inject
     public DatastoreFactory(SystemProperties systemProperties) {
-        if (systemProperties == null) {
-            datastore = null;
+        this.systemProperties = systemProperties;
+
+        if (systemProperties != null) {
+            morphia = null;
+            mongoClient = null;
         } else {
-            Morphia morphia = new Morphia();
+            morphia = new Morphia();
             morphia.mapPackageFromClass(Player.class);
 
-            MongoClient mongoClient = new MongoClient(systemProperties.getMongoHost(), systemProperties.getMongoPort());
-            datastore = morphia.createDatastore(mongoClient, systemProperties.getMongoDbName());
+            mongoClient = new MongoClient(systemProperties.getMongoHost(), systemProperties.getMongoPort());
+            Datastore datastore = morphia.createDatastore(mongoClient, systemProperties.getMongoDbName());
             datastore.ensureIndexes();
         }
     }
 
     @Produces
-    @ApplicationScoped
+    @RequestScoped
     public Datastore getDatastore() {
-        return datastore;
+        return morphia.createDatastore(mongoClient, systemProperties.getMongoDbName());
     }
 
 }

@@ -1,9 +1,9 @@
 package com.business.dao;
 
-import com.domain.Game;
 import com.domain.MasterEntity;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.query.Query;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;

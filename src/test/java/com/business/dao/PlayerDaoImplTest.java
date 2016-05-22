@@ -1,10 +1,11 @@
 package com.business.dao;
 
-import com.business.GameUtil;
+import com.business.GameKeyGenerator;
 import com.domain.Game;
 import com.domain.GameStatus;
 import com.domain.Guess;
 import com.domain.Player;
+import com.mock.DatastoreFactoryMock;
 import com.mock.SystemPropertiesMock;
 import com.mongodb.DuplicateKeyException;
 import org.jglue.cdiunit.AdditionalClasses;
@@ -20,7 +21,7 @@ import java.util.Collections;
 import static org.junit.Assert.*;
 
 @RunWith(CdiRunner.class)
-@AdditionalClasses({DatastoreFactory.class, SystemPropertiesMock.class})
+@AdditionalClasses({DatastoreFactoryMock.class, SystemPropertiesMock.class})
 public class PlayerDaoImplTest {
 
     @Inject
@@ -43,7 +44,7 @@ public class PlayerDaoImplTest {
         //<editor-fold desc="Set game">
         gameRunning = new Game();
         gameRunning.setStatus(GameStatus.MASTER_MINDING);
-        gameRunning.setGameKey(GameUtil.generateGamekey());
+        gameRunning.setGameKey("secret");
         gameRunning.setPlayers(Collections.emptyList());
         gameRunning.setPlayersLimit(2);
         gameRunning.setPlayersCount(1);

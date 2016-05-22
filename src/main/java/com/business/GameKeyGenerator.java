@@ -3,13 +3,9 @@ package com.business;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
-public final class GameUtil {
+public class GameKeyGenerator {
 
-    private GameUtil() {
-
-    }
-
-    public static String generateGamekey() {
+    public String generateGamekey() {
         SecureRandom random = new SecureRandom();
         return new BigInteger(130, random).toString(32);
     }

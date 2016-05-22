@@ -18,10 +18,16 @@ public class Game implements MasterEntity {
     private GameStatus status;
     private int playersLimit;
     private int playersCount;
-    private int maxRounds;
+    private int roundsLimit;
     private int round;
     private int positions;
-    private String secretCode;
+    private String secret;
+
+    public static final int DEFAULT_MULTI_PLAYER_LIMIT = 2;
+    public static final int DEFAULT_ROUNDS_LIMIT = 8;
+    public static final int DEFAULT_POSITIONS = 8;
+    public static final int DEFAULT_SECRET_SIZE = 8;
+    public static final int DEFAULT_COLORS_COUNT = 8;
 
     @Reference
     private List<Player> players;
@@ -64,12 +70,12 @@ public class Game implements MasterEntity {
         this.playersCount = playersCount;
     }
 
-    public int getMaxRounds() {
-        return maxRounds;
+    public int getRoundsLimit() {
+        return roundsLimit;
     }
 
-    public void setMaxRounds(int maxRounds) {
-        this.maxRounds = maxRounds;
+    public void setRoundsLimit(int roundsLimit) {
+        this.roundsLimit = roundsLimit;
     }
 
     public int getRound() {
@@ -88,12 +94,12 @@ public class Game implements MasterEntity {
         this.positions = positions;
     }
 
-    public String getSecretCode() {
-        return secretCode;
+    public String getSecret() {
+        return secret;
     }
 
-    public void setSecretCode(String secretCode) {
-        this.secretCode = secretCode;
+    public void setSecret(String secret) {
+        this.secret = secret;
     }
 
     public void setStatus(GameStatus status) {
@@ -124,10 +130,10 @@ public class Game implements MasterEntity {
                     .append(status, that.status)
                     .append(playersLimit, that.playersLimit)
                     .append(playersCount, that.playersCount)
-                    .append(maxRounds, that.maxRounds)
+                    .append(roundsLimit, that.roundsLimit)
                     .append(round, that.round)
                     .append(positions, that.positions)
-                    .append(secretCode, that.secretCode)
+                    .append(secret, that.secret)
                     .append(gameKey, that.gameKey)
                     .append(players, that.players)
                     .isEquals();
@@ -154,10 +160,10 @@ public class Game implements MasterEntity {
                 .append("status", status)
                 .append("playersLimit", playersLimit)
                 .append("playersCount", playersCount)
-                .append("maxRounds", maxRounds)
+                .append("roundsLimit", roundsLimit)
                 .append("round", round)
                 .append("positions", positions)
-                .append("secretCode", secretCode)
+                .append("secret", secret)
                 .append("gameKey", gameKey)
                 .append("players", players)
                 .toString();
