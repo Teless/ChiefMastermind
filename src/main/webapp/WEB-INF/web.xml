@@ -26,4 +26,9 @@
         <location>/WEB-INF/error404.txt</location>
     </error-page>
 
+    <error-page>
+        <error-code>405</error-code>
+        <location>/WEB-INF/error405.txt</location>
+    </error-page>
+
 </web-app>
