@@ -3,11 +3,13 @@
 - <a href="#creatingGame">Creating a game</a>
   - <a href="#quickGame">Quick Game</a>
   - <a href="#quickMultiplayerGame">Quick Multiplayer Game</a>
-  - <a href="#joinGame">Join Game/a>
+  - <a href="#joinGame">Join Game</a>
   - <a href="#gameStatus">Game Status</a>
 - <a href="#startGame">Start the Game</a>
 - <a href="#gameStatus">Find game status</a>
 - <a href="#playingTheGame">Playing the game</a>
+  - <a href="#guessStatus">Guess Status</a>
+  - <a href="#secrectCode">Secret Code</a>
 
 This an Mastermind API implentation in Java. Don't know how the game works? Check the <a href="https://en.wikipedia.org/wiki/Mastermind_(board_game)#Gameplay_and_rules">Rules<a/>
 
@@ -119,7 +121,74 @@ A game can have 4 states:
 
 <h2 id="startGame">Start the Game</h2>
 
+| Parameters  | POST /game/start |
+| ------------- | ------------- |
+| gameKey  | key of the game |
+| gameId  | game id |
+
+
+```
+{Status}
+```
+
+Join a game response contains the following states:
+- SUCCESS: The player joinned the game with success
+- GAME_NOT_FOUND: The game was not found
+- WRONG_GAME_KEY: The game was found, but gameKey is wrong
+- GAME_WAS_NOT_ON_WAIT: The game was not waiting for more players (is running, solved or finished)
+
+
 <h2 id="gameStatus">Find game status</h2>
 
+| Parameters  | POST /game/status |
+| ------------- | ------------- |
+| gameId  | game id  |
+
+```
+{
+  "id": "{for each game is generated a unique id}",
+  "gameKey": "{for each game is generate a key (visible by the creator of the game) used to start the game}",
+  "status": "{status}",
+  "playersLimit": {playersLimit},
+  "playersCount": {count of players in the game},
+  "roundsLimit": {roundsLimit},
+  "round": {current round of the game},
+  "roundGuesses": {numbers of guesses in the round},
+  "positions": {positions},
+  "players": [list of players name]
+}
+```
+
 <h2 id="playingTheGame">Playing the game</h2>
-	
+	| Parameters  | POST /game/guess |
+| ------------- | ------------- |
+| code  | guess code  |
+| userName  | user name  |
+| gameId  | game id  |
+
+```
+{
+  "near": {number of nears},
+  "exact": {number of exact maches},
+  "code": "{submited guess code}",
+  "status": "{status}"
+}
+
+<h3 id="guessStatus">Guess status</h3>
+A guess can have the following status:
+- VALID_GUESS: the player made a valid guess but didn't solve the secrect
+- WAITING_OTHER_PLAYERS_GUESSES: the player has to wait for the other players guesses of the round
+- NOT_IN_THE_GAME: the player is not in the game
+- INVALID_GUESS: the guess contains invalid characters or don't have the size of the secret
+- GAME_IS_WAITING_FOR_MORE: the game was not started wet
+- GAME_HAS_ENDED: the game has ended
+- SOLVED: the guess solved the secret
+
+<h3 id="secrectCode">Secret Code</h3>
+
+The secrect code is generated base on the "secrectSize" parameter (if a quick game is created the secrectSize and "numbers of color" will be set to 8), a random String is created with the size of the "secrectSize" parameter filled with caracter '0' -> 'secreSize' (exclusive), ex:
+
+- secretSize = 4
+- output = "1032"
+
+The number can repeat inside the secret
