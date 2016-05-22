@@ -21,7 +21,7 @@ This API allows you to create a game with the configurations of your choice:
 - Limit of players
 - Limit of rounds 
 - Number of positions
-- Secrect size
+- Secret size
 - Number of colors
 
 But if you want to quickly create a new the API exports two shorcuts methos
@@ -77,7 +77,7 @@ But if you want to quickly create a new the API exports two shorcuts methos
 | playersLimit  | limit of players |
 | roundsLimit  | limit of rounds  |
 | positions  | number os positions |
-| secretSize  | secrect size  |
+| secretSize  | secret size  |
 | colorsCount  | number of colors  |
 
 ```
@@ -108,7 +108,7 @@ But if you want to quickly create a new the API exports two shorcuts methos
 {Status}
 ```
 
-Join a game response contains the following states:
+Join a game method's response contains the following states:
 - SUCCESS: The player joinned the game with success
 - GAME_NOT_FOUND: The game was not found
 - GAME_FULL: The game is full
@@ -179,7 +179,7 @@ Join a game response contains the following states:
 
 <h3 id="guessStatus">Guess status</h3>
 A guess can have the following status:
-- VALID_GUESS: the player made a valid guess but didn't solve the secrect
+- VALID_GUESS: the player made a valid guess but didn't solve the secret
 - WAITING_OTHER_PLAYERS_GUESSES: the player has to wait for the other players guesses of the round
 - NOT_IN_THE_GAME: the player is not in the game
 - INVALID_GUESS: the guess contains invalid characters or don't have the size of the secret
@@ -189,7 +189,7 @@ A guess can have the following status:
 
 <h3 id="secrectCode">Secret Code</h3>
 
-The secrect code is generated base on the "secrectSize" parameter (if a quick game is created the secrectSize and "numbers of color" will be set to 8), a random String is created with the size of the "secrectSize" parameter filled with caracter '0' -> 'secreSize' (exclusive), ex:
+The secret code is generated base on the "secretSize" parameter (if a quick game is created the secretSize and "numbers of color" will be set to 8), a random String is created with the size of the "secretSize" parameter filled with caracter '0' -> 'secreSize' (exclusive), ex:
 
 - secretSize = 4
 - output = "1032"
@@ -201,6 +201,8 @@ To run the server you need:
 - JDK8 installed
 - Apache tomcat 7.x
 - MongoDB 3.x
+
+To run the server deploy the war file "chiefmastermind-1.0.war" in your tomcat server
 
 <h3 id="dbConfig">DB Configuration</h3>
 The API uses a mongoDB server, by default the applications connects to "localhost:27017" and creates the db "ChiefMastermind". If you need to change the connection you can edit the file "src/main/resources/development.properties" and change the configuration
