@@ -2,7 +2,7 @@ package com.business;
 
 import com.business.dao.GameDao;
 import com.business.dao.PlayerDao;
-import com.controller.GameController;
+import com.controller.GameStatusController;
 import com.domain.Game;
 import com.domain.GameStatus;
 import com.domain.Player;
@@ -32,7 +32,7 @@ public class GameCreator {
         this.gameKeyGenerator = gameKeyGenerator;
     }
 
-    private static final Logger logger = LoggerFactory.getLogger(GameController.class);
+    private static final Logger logger = LoggerFactory.getLogger(GameStatusController.class);
 
     public Game createQuickGame(String userName) {
         return createNewGame(userName, 1,

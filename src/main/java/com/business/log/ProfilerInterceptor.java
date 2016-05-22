@@ -1,11 +1,10 @@
-package com.business.interceptor;
+package com.business.log;
 
 import br.com.caelum.vraptor.Accepts;
 import br.com.caelum.vraptor.AroundCall;
 import br.com.caelum.vraptor.Intercepts;
 import br.com.caelum.vraptor.controller.ControllerMethod;
 import br.com.caelum.vraptor.interceptor.SimpleInterceptorStack;
-import com.business.log.ProfilerLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.profiler.Profiler;

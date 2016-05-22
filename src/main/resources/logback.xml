@@ -57,7 +57,6 @@
 
     <logger name="PROFILE_LOG" level="debug">
         <appender-ref ref="PROFILE" />
-        <appender-ref ref="STDOUT" />
     </logger>
 
 </configuration>

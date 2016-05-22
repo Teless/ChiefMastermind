@@ -2,8 +2,12 @@ package com.business;
 
 import br.com.caelum.vraptor.environment.Property;
 
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.text.SimpleDateFormat;
 
+@ApplicationScoped
 public class SystemPropertiesImpl implements SystemProperties {
 
     @Inject
@@ -11,21 +15,18 @@ public class SystemPropertiesImpl implements SystemProperties {
     private String MONGO_DB_PROPERTY;
 
     @Inject
-    @Property(value = "mongo.host", defaultValue = "mongodb://localhost")
+    @Property(value = "mongo.host", defaultValue = "localhost")
     private String MONGO_HOST_PROPERTY;
 
     @Inject
-    @Property(value = "mongo.port", defaultValue = "mongodb://localhost")
+    @Property(value = "mongo.port", defaultValue = "27017")
     private String MONGO_PORT_PROPERTY;
 
-    private final int mongoPort;
+    private int mongoPort;
 
-    public SystemPropertiesImpl() {
-        if (MONGO_PORT_PROPERTY == null) {
-            throw new IllegalStateException("MongoDB port was not defined");
-        } else {
-            mongoPort = Integer.parseInt(MONGO_PORT_PROPERTY);
-        }
+    @PostConstruct
+    public void postConstructor() {
+        mongoPort = Integer.parseInt(MONGO_PORT_PROPERTY);
     }
 
     @Override

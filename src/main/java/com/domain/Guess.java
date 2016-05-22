@@ -10,7 +10,7 @@ public class Guess {
     private int near;
     private int exact;
     private String code;
-    private transient GuessStatus status;
+    private GuessStatus status;
 
     public static Guess emptyGuess(GuessStatus status) {
         Guess guess = new Guess();

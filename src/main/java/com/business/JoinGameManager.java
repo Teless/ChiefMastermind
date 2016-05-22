@@ -2,7 +2,7 @@ package com.business;
 
 import com.business.dao.GameDao;
 import com.business.dao.PlayerDao;
-import com.controller.GameController;
+import com.controller.GameStatusController;
 import com.domain.Game;
 import com.domain.GameStatus;
 import com.domain.JoinGameStatus;
@@ -19,7 +19,7 @@ public class JoinGameManager {
     private final GameDao gameDao;
     private final PlayerDao playerDao;
 
-    private static final Logger logger = LoggerFactory.getLogger(GameController.class);
+    private static final Logger logger = LoggerFactory.getLogger(GameStatusController.class);
 
     @Inject
     public JoinGameManager(GameDao gameDao, PlayerDao playerDao) {
@@ -28,7 +28,6 @@ public class JoinGameManager {
     }
 
     // TODO: 5/22/16 add to documentation
-    // TODO: 5/22/16 handler duplicateKeyExpcetion
     public JoinGameStatus joinGame(String userName, String gameId) throws DuplicateKeyException {
         Game game = gameDao.find(gameId);
 

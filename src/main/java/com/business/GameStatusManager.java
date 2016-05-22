@@ -1,7 +1,7 @@
 package com.business;
 
 import com.business.dao.GameDao;
-import com.controller.GameController;
+import com.controller.GameStatusController;
 import com.domain.Game;
 import com.domain.GameStatus;
 import com.domain.StartGameStatus;
@@ -15,7 +15,7 @@ public class GameStatusManager {
 
     private final GameDao gameDao;
 
-    private static final Logger logger = LoggerFactory.getLogger(GameController.class);
+    private static final Logger logger = LoggerFactory.getLogger(GameStatusController.class);
 
     @Inject
     public GameStatusManager(GameDao gameDao) {

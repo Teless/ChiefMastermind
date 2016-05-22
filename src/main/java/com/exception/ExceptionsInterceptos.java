@@ -8,6 +8,7 @@ import br.com.caelum.vraptor.core.InterceptorStackHandlersCache;
 import br.com.caelum.vraptor.events.InterceptorsExecuted;
 import br.com.caelum.vraptor.events.InterceptorsReady;
 import br.com.caelum.vraptor.interceptor.SimpleInterceptorStack;
+import com.business.ParametersValidator;
 import com.google.gson.JsonSyntaxException;
 import com.mongodb.MongoException;
 import org.slf4j.Logger;
@@ -72,8 +73,7 @@ public class ExceptionsInterceptos extends DefaultInterceptorStack {
 
             logger.error("Unexpected error intercepted", ex);
         } else if (ex.getCause() instanceof JsonSyntaxException) {
-            result.use(http()).setStatusCode(400);
-            result.use(http()).body("Invalid parameters");
+            ParametersValidator.sendBadRequest(result);
 
             logger.error("Unexpected error intercepted", ex);
         } else {

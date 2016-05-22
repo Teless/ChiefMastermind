@@ -35,6 +35,13 @@
             <version>2.1.2.Final</version>
         </dependency>
 
+        <!-- JSTL (JSP Standard Tag Library) -->
+        <dependency>
+            <groupId>jstl</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
+
         <!-- Log -->
         <dependency>
             <groupId>org.slf4j</groupId>

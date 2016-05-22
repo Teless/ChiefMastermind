@@ -15,4 +15,15 @@
         <listener-class>org.jboss.weld.environment.servlet.Listener</listener-class>
     </listener>
 
+    <context-param>
+        <param-name>br.com.caelum.vraptor.environment</param-name>
+        <param-value>development</param-value>
+        <!--<param-value>production</param-value>-->
+    </context-param>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/error404.txt</location>
+    </error-page>
+
 </web-app>
