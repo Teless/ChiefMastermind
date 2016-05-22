@@ -29,7 +29,6 @@ public class Game implements MasterEntity {
     public static final int DEFAULT_MULTI_PLAYER_LIMIT = 2;
     public static final int DEFAULT_ROUNDS_LIMIT = Integer.MAX_VALUE;
     public static final int DEFAULT_POSITIONS = 8;
-    public static final int DEFAULT_SECRET_SIZE = 8;
     public static final int DEFAULT_COLORS_COUNT = 8;
 
     @Reference

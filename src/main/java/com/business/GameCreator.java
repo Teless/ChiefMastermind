@@ -38,7 +38,6 @@ public class GameCreator {
         return createNewGame(userName, 1,
                 Game.DEFAULT_ROUNDS_LIMIT,
                 Game.DEFAULT_POSITIONS,
-                Game.DEFAULT_SECRET_SIZE,
                 Game.DEFAULT_COLORS_COUNT,
                 GameStatus.MASTER_MINDING);
     }
@@ -48,15 +47,13 @@ public class GameCreator {
                 Game.DEFAULT_MULTI_PLAYER_LIMIT,
                 Game.DEFAULT_ROUNDS_LIMIT,
                 Game.DEFAULT_POSITIONS,
-                Game.DEFAULT_SECRET_SIZE,
                 Game.DEFAULT_COLORS_COUNT,
                 GameStatus.WAITING);
     }
 
-    public Game createNewGame(String userName, int playersLimit, int roundsLimit, int positions,
-            int secretSize, int colorsCount, GameStatus status) {
+    public Game createNewGame(String userName, int playersLimit, int roundsLimit, int positions, int colorsCount, GameStatus status) {
 
-        validateGameParameters(playersLimit, roundsLimit, positions, secretSize, colorsCount, status);
+        validateGameParameters(playersLimit, roundsLimit, positions, colorsCount, status);
 
         Game game = new Game();
         game.setGameKey(gameKeyGenerator.generateGameKey());
@@ -65,7 +62,7 @@ public class GameCreator {
         game.setPositions(positions);
         game.setStatus(status);
         game.setPlayersCount(1);
-        game.setSecret(secretGenerator.newSecret(colorsCount, secretSize));
+        game.setSecret(secretGenerator.newSecret(colorsCount, positions));
         gameDao.save(game);
 
         Player player = new Player(userName);
@@ -82,8 +79,7 @@ public class GameCreator {
     }
 
     // TODO: 5/22/16 add to documentation
-    private void validateGameParameters(int playersLimit, int roundsLimit, int positions,
-            int secretSize, int colorsCount, GameStatus status) {
+    private void validateGameParameters(int playersLimit, int roundsLimit, int positions, int colorsCount, GameStatus status) {
 
         Map<String, String> invalidParameters = new HashMap<>();
         if (playersLimit <= 0) {
@@ -96,10 +92,6 @@ public class GameCreator {
 
         if (positions <= 0) {
             invalidParameters.put("positions", String.valueOf(positions));
-        }
-
-        if (secretSize <= 0) {
-            invalidParameters.put("secretSize", String.valueOf(secretSize));
         }
 
         if (colorsCount <= 0) {

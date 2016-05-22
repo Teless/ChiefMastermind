@@ -64,7 +64,7 @@ public class ExceptionsInterceptos extends DefaultInterceptorStack {
     private void processException(Throwable ex) {
         if (ex instanceof MongoException) {
             result.use(http()).setStatusCode(500);
-            result.use(http()).body("MongoDB Error");
+            result.use(http()).body("MongoDB Error: " + ex.getMessage());
 
             logger.error("Unexpected error intercepted", ex);
         } else if (ex instanceof UnexpectedException) {

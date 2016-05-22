@@ -77,15 +77,13 @@ public class GameCreatorController {
 
     @Post
     @Consumes(value = "application/json")
-    public void newGame(String userName, int playersLimit, int roundsLimit, int positions,
-            int secretSize, int colorsCount) {
+    public void newGame(String userName, int playersLimit, int roundsLimit, int positions, int colorsCount) {
 
-        if (containsNullValue(userName, playersLimit, roundsLimit, positions,
-                secretSize, colorsCount)) {
+        if (containsNullValue(userName, playersLimit, roundsLimit, positions, colorsCount)) {
             sendBadRequest(result);
         } else {
             Game game = gameCreator.createNewGame(userName, playersLimit, roundsLimit,
-                    positions, secretSize, colorsCount, GameStatus.WAITING);
+                    positions, colorsCount, GameStatus.WAITING);
 
             result.use(json())
                     .serializeNulls()

@@ -51,7 +51,7 @@ public class GameCreatorTest {
     @Test
     public void testCreateQuickGame() throws Exception {
         when(gameKeyGeneratorMock.generateGameKey()).thenReturn("gameKey");
-        when(secretGeneratorMock.newSecret(Game.DEFAULT_COLORS_COUNT, Game.DEFAULT_SECRET_SIZE))
+        when(secretGeneratorMock.newSecret(Game.DEFAULT_COLORS_COUNT, Game.DEFAULT_POSITIONS))
                 .thenReturn("secret");
 
         Game game = gameCreator.createQuickGame("Rafael");
@@ -78,7 +78,7 @@ public class GameCreatorTest {
     @Test
     public void testCreateQuickMultiplayerGame() throws Exception {
         when(gameKeyGeneratorMock.generateGameKey()).thenReturn("gameKey");
-        when(secretGeneratorMock.newSecret(Game.DEFAULT_COLORS_COUNT, Game.DEFAULT_SECRET_SIZE))
+        when(secretGeneratorMock.newSecret(Game.DEFAULT_COLORS_COUNT, Game.DEFAULT_POSITIONS))
                 .thenReturn("secret");
 
         Game game = gameCreator.createQuickMultiplayerGame("Rafael");
@@ -105,9 +105,9 @@ public class GameCreatorTest {
     @Test
     public void testCreateNewGame() throws Exception {
         when(gameKeyGeneratorMock.generateGameKey()).thenReturn("gameKey");
-        when(secretGeneratorMock.newSecret(11, 9)).thenReturn("secret");
+        when(secretGeneratorMock.newSecret(9, 7)).thenReturn("secret");
 
-        Game game = gameCreator.createNewGame("Rafael", 3, 5, 7, 9, 11, GameStatus.WAITING);
+        Game game = gameCreator.createNewGame("Rafael", 3, 5, 7, 9, GameStatus.WAITING);
 
         Player expectedPlayer = new Player("Rafael");
         expectedPlayer.setId(game.getPlayers().get(0).getId());
@@ -131,9 +131,9 @@ public class GameCreatorTest {
     @Test
     public void testCreateNewGameValidRunning() throws Exception {
         when(gameKeyGeneratorMock.generateGameKey()).thenReturn("gameKey");
-        when(secretGeneratorMock.newSecret(11, 9)).thenReturn("secret");
+        when(secretGeneratorMock.newSecret(9, 7)).thenReturn("secret");
 
-        Game game = gameCreator.createNewGame("Rafael", 1, 5, 7, 9, 11, GameStatus.MASTER_MINDING);
+        Game game = gameCreator.createNewGame("Rafael", 1, 5, 7, 9, GameStatus.MASTER_MINDING);
 
         Player expectedPlayer = new Player("Rafael");
         expectedPlayer.setId(game.getPlayers().get(0).getId());
@@ -157,7 +157,7 @@ public class GameCreatorTest {
     @Test(expected = InvalidGameConfigurationException.class)
     public void testCreateNewGameInvalidPlayerLimit() throws Exception {
         try {
-            gameCreator.createNewGame("Rafael", 0, 5, 7, 9, 11, GameStatus.WAITING);
+            gameCreator.createNewGame("Rafael", 0, 5, 7, 9, GameStatus.WAITING);
         } catch (InvalidGameConfigurationException ex) {
             Map<String, String> expected = Collections.singletonMap("playersLimit", "0");
             assertEquals(expected, ex.getInvalidParameters());
@@ -169,7 +169,7 @@ public class GameCreatorTest {
     @Test(expected = InvalidGameConfigurationException.class)
     public void testCreateNewGameInvalidRoundsLimit() throws Exception {
         try {
-            gameCreator.createNewGame("Rafael", 3, 0, 7, 9, 11, GameStatus.WAITING);
+            gameCreator.createNewGame("Rafael", 3, 0, 7, 9, GameStatus.WAITING);
         } catch (InvalidGameConfigurationException ex) {
             Map<String, String> expected = Collections.singletonMap("roundsLimit", "0");
             assertEquals(expected, ex.getInvalidParameters());
@@ -181,7 +181,7 @@ public class GameCreatorTest {
     @Test(expected = InvalidGameConfigurationException.class)
     public void testCreateNewGameInvalidPositions() throws Exception {
         try {
-            gameCreator.createNewGame("Rafael", 3, 5, 0, 9, 11, GameStatus.WAITING);
+            gameCreator.createNewGame("Rafael", 3, 5, 0, 9, GameStatus.WAITING);
         } catch (InvalidGameConfigurationException ex) {
             Map<String, String> expected = Collections.singletonMap("positions", "0");
             assertEquals(expected, ex.getInvalidParameters());
@@ -191,21 +191,9 @@ public class GameCreatorTest {
     }
 
     @Test(expected = InvalidGameConfigurationException.class)
-    public void testCreateNewGameInvalidSecretSize() throws Exception {
-        try {
-            gameCreator.createNewGame("Rafael", 3, 5, 7, 0, 11, GameStatus.WAITING);
-        } catch (InvalidGameConfigurationException ex) {
-            Map<String, String> expected = Collections.singletonMap("secretSize", "0");
-            assertEquals(expected, ex.getInvalidParameters());
-
-            throw ex;
-        }
-    }
-
-    @Test(expected = InvalidGameConfigurationException.class)
     public void testCreateNewGameInvalidColorsCount() throws Exception {
         try {
-            gameCreator.createNewGame("Rafael", 3, 5, 7, 9, 0, GameStatus.WAITING);
+            gameCreator.createNewGame("Rafael", 3, 5, 7, 0, GameStatus.WAITING);
         } catch (InvalidGameConfigurationException ex) {
             Map<String, String> expected = Collections.singletonMap("colorsCount", "0");
             assertEquals(expected, ex.getInvalidParameters());
@@ -217,7 +205,7 @@ public class GameCreatorTest {
     @Test(expected = InvalidGameConfigurationException.class)
     public void testCreateNewGameInvalidColorsInvalidStatusRunning() throws Exception {
         try {
-            gameCreator.createNewGame("Rafael", 3, 5, 7, 9, 11, GameStatus.MASTER_MINDING);
+            gameCreator.createNewGame("Rafael", 3, 5, 7, 9, GameStatus.MASTER_MINDING);
         } catch (InvalidGameConfigurationException ex) {
             Map<String, String> expected = Collections.singletonMap("status", "MASTER_MINDING");
             assertEquals(expected, ex.getInvalidParameters());
@@ -229,7 +217,7 @@ public class GameCreatorTest {
     @Test(expected = InvalidGameConfigurationException.class)
     public void testCreateNewGameInvalidColorsInvalidStatus() throws Exception {
         try {
-            gameCreator.createNewGame("Rafael", 3, 5, 7, 9, 11, GameStatus.FINISHED);
+            gameCreator.createNewGame("Rafael", 3, 5, 7, 9, GameStatus.FINISHED);
         } catch (InvalidGameConfigurationException ex) {
             Map<String, String> expected = Collections.singletonMap("status", "FINISHED");
             assertEquals(expected, ex.getInvalidParameters());

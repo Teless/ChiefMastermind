@@ -70,7 +70,7 @@ public class QuickMultiplayerGameTest {
 
     @Test
     public void testQuickGame() throws Exception {
-        when(secretGeneratorMock.newSecret(Game.DEFAULT_COLORS_COUNT, Game.DEFAULT_SECRET_SIZE))
+        when(secretGeneratorMock.newSecret(Game.DEFAULT_COLORS_COUNT, Game.DEFAULT_POSITIONS))
                 .thenReturn("00001111");
 
         Game game = gameCreator.createQuickMultiplayerGame("Player1");
