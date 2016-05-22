@@ -125,7 +125,7 @@ public class GuessesManager {
                 game.incRound();
                 game.setRoundGuesses(0);
 
-                if (game.getStatus() == GameStatus.SOLVED) {
+                if (game.getRound() == game.getRoundsLimit() || game.getStatus() == GameStatus.SOLVED) {
                     game.setStatus(GameStatus.FINISHED);
                 }
             } else {

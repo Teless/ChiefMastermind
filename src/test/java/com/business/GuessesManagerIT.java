@@ -136,4 +136,30 @@ public class GuessesManagerIT {
         assertEquals(0, fetchedGame.getRoundGuesses());
     }
 
+    @Test
+    public void testExaustingRounds() throws Exception {
+        game.setPlayersCount(1);
+        game.setRoundsLimit(1);
+        gameDao.save(game);
+
+        Guess guess1 = guessesManager.guess("0011", player.getName(), game.getId().toString());
+        Guess guess2 = guessesManager.guess("0011", player.getName(), game.getId().toString());
+
+        Guess expectedGuess1 = new Guess();
+        expectedGuess1.setCode("0011");
+        expectedGuess1.setExact(4);
+        expectedGuess1.setNear(0);
+        expectedGuess1.setStatus(GuessStatus.SOLVED);
+
+        Guess expectedGuess2 = Guess.emptyGuess(GuessStatus.GAME_HAS_ENDED);
+        expectedGuess2.setCode("0011");
+
+        assertEquals(expectedGuess1, guess1);
+        assertEquals(expectedGuess2, guess2);
+
+        Game fetchedGame = gameDao.find(this.game.getId().toString());
+        assertEquals(GameStatus.FINISHED, fetchedGame.getStatus());
+        assertEquals(0, fetchedGame.getRoundGuesses());
+    }
+
 }
